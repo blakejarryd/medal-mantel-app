@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
 import { Modal, View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, Menu, Portal, Provider, Text, TextInput } from 'react-native-paper';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import theme from '../../theme';
 
 const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
   const [eventName, setEventName] = useState('');
-  const [eventDate, setEventDate] = useState('');
+  const [eventDate, setEventDate] = useState(new Date());
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(Platform.OS === 'ios');
   const [name, setName] = useState('');
   const [distance, setDistance] = useState('');
-  // const [surface, setSurface] = useState('');
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
   const [seconds, setSeconds] = useState('');
-  //const [place, setPlace] = useState('');
-  // const [resultsLink, setResultsLink] = useState('');
-  // const [stravaLink, setStravaLink] = useState('');
 
-  const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
+  const resetForm = () => {
+    setEventName('');
+    setEventDate(new Date());
+    setIsDatePickerVisible(false)
+    setName('');
+    setDistance('');
+    setHours('');
+    setMinutes('');
+    setSeconds('');
+  };
+
+  const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra', 'Other'];
   const surfaces = ['Road', 'Track', 'Trail'];
 
   const storeData = async (data) => {
@@ -41,22 +50,62 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
     }
   }
 
-  const handleSubmit = () => {
-    const raceTime = `${hours}:${minutes}:${seconds}`;
-    
-    const data = {
-      raceDate: eventDate,
-      raceName: name,
-      distance: eventName === 'Ultra Marathon' || eventName === 'Other' ? distance : eventName,
-      event: eventName,
-      time: raceTime,
-    };
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || eventDate;
+    if (Platform.OS === 'android') {
+      setIsDatePickerVisible(false); // Hide date picker after date selection on Android
+    }
+    setEventDate(currentDate);
+  };
 
+  const displayDatePicker = () => {
+    setIsDatePickerVisible(true);
+  };
+
+  const validateNumberInput = (value, max) => {
+    let num = parseInt(value, 10);
+    if (isNaN(num) || num < 0) {
+      return '00';
+    }
+    if (num > max) {
+      return max.toString().padStart(2, '0');
+    }
+    return num.toString().padStart(2, '0');
+  };
+
+  const handleBlurHours = () => {
+    setHours(validateNumberInput(hours, 99));
+  };
+
+  const handleBlurMinutesOrSeconds = (setter, value) => {
+    setter(validateNumberInput(value, 59));
+  };
+
+  const duration = `${validateNumberInput(hours, 99)}:${validateNumberInput(minutes, 59)}:${validateNumberInput(seconds, 59)}`;
+  
+  const handleClose = () => {
+    resetForm();
+    onClose(); 
+  };
+
+  const handleSubmit = () => {
+    const data = {
+      raceDate: eventDate.toISOString().split('T')[0],
+      raceName: name,
+      distance: eventName === 'Ultra' || eventName === 'Other' ? distance : eventName,
+      event: eventName,
+      time: duration,
+    };
     // Save data to AsyncStorage
     onSubmit(data);
-    
-    onClose();
+    storeData(data).then(() => {
+      resetForm();
+      onClose();
+    }).catch(error => {
+      console.error("An error occurred while storing data", error);
+    });
   };
+
 
   return (
     <Provider>
@@ -65,7 +114,7 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
           animationType="slide"
           transparent={true}
           visible={isVisible}
-          onRequestClose={onClose}
+          onRequestClose={handleClose}
         >
           <View style={styles.modalContainer}>
             <KeyboardAvoidingView 
@@ -73,25 +122,43 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
                 style={{ flex: 1 }}
               >
             <ScrollView contentContainerStyle={styles.scrollView}>
-              
-              <Text style={styles.label}>Event Date:</Text>
-              <TextInput 
-                value={eventDate} 
-                onChangeText={setEventDate} 
-                style={styles.input} 
-                placeholder="DD-MM-YYYY" 
-                color={theme.colors.primary} 
-              />
-
-              <Text style={styles.label}>Event Name:</Text>
-              <TextInput 
+            <Text style={styles.label}>Event Name</Text>  
+            <TextInput 
                 value={name} 
                 onChangeText={setName} 
                 style={styles.input} 
                 placeholder="Name of the Race"
               />
 
-              <Text style={styles.label}>Event:</Text>
+              <Text style={styles.label}>Race Date</Text>
+              <View style={styles.dateContainer}>
+              {Platform.OS === 'ios' ? (
+                // iOS: always show the picker
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={eventDate}
+                  mode="date"
+                  display="compact" // iOS compact style
+                  onChange={onDateChange}
+                />
+              ) : (
+                // Android: button to show picker
+                <>
+                  <Button onPress={displayDatePicker} labelStyle={{ color: theme.colors.primary }} >{eventDate.toDateString()}</Button>
+                  {isDatePickerVisible && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={eventDate}
+                      mode="date"
+                      display="calendar" // Android calendar style
+                      onChange={onDateChange}
+                    />
+                  )}
+                </>
+              )}
+              </View>
+
+              <Text style={styles.label}>Distance</Text>
               <View style={styles.verticalButtonGroup}>
                 {events.map(event => (
                   <Button
@@ -108,9 +175,8 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
                 ))}
               </View>
 
-              {(eventName === 'Ultra Marathon' || eventName === 'Other') && (
+              {(eventName === 'Ultra' || eventName === 'Other') && (
                 <>
-                  <Text style={styles.label}>Distance:</Text>
                   <TextInput 
                     value={distance} 
                     onChangeText={setDistance} 
@@ -121,77 +187,35 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
                 </>
               )}
 
-              {/* <Text style={styles.label}>Surface:</Text>
-              <View style={styles.buttonGroup}>
-                {surfaces.map(surfaceItem => (
-                  <Button
-                    key={surfaceItem}
-                    mode={surface === surfaceItem ? "contained" : "outlined"}
-                    onPress={() => setSurface(surfaceItem)}
-                    style={styles.surfaceButton}
-                    color={theme.colors.primary} 
-                    contentStyle={{ backgroundColor: surface === surfaceItem ? theme.colors.primary : theme.colors.surface }}
-                    labelStyle={{ color: surface === surfaceItem ? theme.colors.surface : theme.colors.primary }}
-                  >
-                    {surfaceItem}
-                  </Button>
-                ))}
-              </View> */}
-
-              <Text style={styles.label}>Time:</Text>
-              <View style={styles.timeContainer}>
-                <TextInput 
-                  value={hours} 
+              <Text style={styles.label}>Time</Text>
+              <View style={styles.timeInputContainer}>
+                <TextInput
+                  value={hours}
                   onChangeText={setHours}
+                  onBlur={handleBlurHours}
                   style={styles.timeInput}
+                  keyboardType="numeric"
                   placeholder="HH"
-                  keyboardType="numeric"
-                  maxLength={2}
                 />
-                <Text>:</Text>
-                <TextInput 
-                  value={minutes} 
+                <Text style={styles.timeSeperator}>:</Text>
+                <TextInput
+                  value={minutes}
                   onChangeText={setMinutes}
+                  onBlur={() => handleBlurMinutesOrSeconds(setMinutes, minutes)}
                   style={styles.timeInput}
+                  keyboardType="numeric"
                   placeholder="MM"
-                  keyboardType="numeric"
-                  maxLength={2}
                 />
-                <Text>:</Text>
-                <TextInput 
-                  value={seconds} 
+                <Text style={styles.timeSeperator}>:</Text>
+                <TextInput
+                  value={seconds}
                   onChangeText={setSeconds}
+                  onBlur={() => handleBlurMinutesOrSeconds(setSeconds, seconds)}
                   style={styles.timeInput}
-                  placeholder="SS"
                   keyboardType="numeric"
-                  maxLength={2}
+                  placeholder="SS"
                 />
               </View>
-
-              {/* <Text style={styles.label}>Place:</Text>
-              <TextInput 
-                value={place} 
-                onChangeText={setPlace} 
-                style={styles.input} 
-                placeholder="Race Position" 
-                keyboardType="numeric"
-              />
-
-              <Text style={styles.label}>Link to Results:</Text>
-              <TextInput 
-                value={resultsLink} 
-                onChangeText={setResultsLink} 
-                style={styles.input} 
-                placeholder="https://"
-              />
-
-              <Text style={styles.label}>Link to Strava Activity:</Text>
-              <TextInput 
-                value={stravaLink} 
-                onChangeText={setStravaLink} 
-                style={styles.input} 
-                placeholder="https://"
-              /> */}
 
               <View style={styles.buttonContainer}>
                 <Button 
@@ -206,7 +230,7 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
                 </Button>
                 <Button 
                   mode="outlined" 
-                  onPress={onClose} 
+                  onPress={handleClose} 
                   style={styles.button}
                   color={theme.colors.primary} 
                   contentStyle={{ backgroundColor: theme.colors.surface }}
@@ -226,6 +250,7 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
 
 const styles = StyleSheet.create({
   modalContainer: {
+    paddingVertical: 60,
     flex: 1,
     justifyContent: 'center',
     padding: theme.spacing.l,
@@ -246,6 +271,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: theme.roundness,
     color: theme.colors.textPrimary,
+    margin: theme.spacing.s,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -269,22 +295,38 @@ const styles = StyleSheet.create({
     margin: theme.spacing.xs,
   },
   verticalButtonGroup: {
+    flexDirection: 'row', // Arrange items in a row
+    flexWrap: 'wrap',     // Allow wrapping to next line
+    justifyContent: 'space-between', // Distributes space evenly
     marginVertical: theme.spacing.s,
   },
   verticalEventButton: {
     margin: theme.spacing.xs,
+    flexBasis: '47.5%', // Adjust this value to control the space buttons use
   },
-  timeContainer: {
+  dateContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: theme.spacing.xs,
+  },
+  timeInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'start', // Align items to the center to reduce space around
+    marginTop: theme.spacing.xs,
+    marginBottom: theme.spacing.xs, // To add some space below the container
   },
   timeInput: {
-    backgroundColor: theme.colors.grey,
+    backgroundColor: theme.colors.grey, // Set the background color to grey
     width: 50,
-    height: 45,
-    marginHorizontal: theme.spacing.xs,
-    paddingVertical: 0,
-    borderRadius: theme.roundness,
+    textAlign: 'left',
+    marginHorizontal: theme.spacing.xs, // Add horizontal margin for spacing between inputs
+    height: 45, // Match the height of other inputs
+    borderRadius: theme.roundness, // Match the border radius of other inputs
+    color: theme.colors.textPrimary,
+    fontSize: theme.fontSizes.medium, // Optional, to match font size of other inputs
+  },
+  timeSeperator: {
+    alignSelf: 'center',
   },
 });
 

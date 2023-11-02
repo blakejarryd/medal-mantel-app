@@ -18,7 +18,7 @@ const BottomTabNavigator = ({ setActiveRouteName }) => {
   const [routes] = React.useState([
     { key: 'myraces', title: 'My Races' },
     { key: 'personalbests', title: 'Personal Bests' },
-    { key: 'settings', title: 'Settings' },
+    // { key: 'settings', title: 'Settings' },
   ]);
 
   const sceneMap = {
@@ -32,7 +32,7 @@ const BottomTabNavigator = ({ setActiveRouteName }) => {
         <MyRacesScreen />
       </RaceDataProvider>
     ),
-    settings: Settings,
+    // settings: Settings,
   };
 
   const renderIcon = (props) => {

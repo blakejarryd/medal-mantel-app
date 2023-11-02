@@ -4,10 +4,15 @@ const formatDate = (date) => {
 }
 
 function formatRaceTime(time) {
-  const parts = time.split(':');
+  let parts = time.split(':');
 
-  // If hours is '00' or just '0', remove it.
-  if (parts[0] === '00' || parts[0] === '0') {
+  // Remove leading '0' from hours if hours are less than 10 but more than 0.
+  if (parts[0].charAt(0) === '0' && parts[0] !== '00') {
+    parts[0] = parts[0].substring(1);
+  }
+
+  // If hours is '00', remove it.
+  if (parts[0] === '00') {
     parts.shift();
   }
 

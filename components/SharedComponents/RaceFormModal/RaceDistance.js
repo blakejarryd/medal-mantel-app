@@ -4,7 +4,7 @@ import theme from '../../../theme';
 
 const RaceDistance = ({ eventName, setEventName, distance, setDistance }) => {
   const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra', 'Other'];
-  const distances = { '5k': '5', '10k': '10', 'Half Marathon': '21.0975', 'Marathon': '42.195' };
+  const distances = { '5k': '5', '10k': '10', 'Half Marathon': '21.1', 'Marathon': '42.2' };
 
   const isSelected = (event) => eventName === event;
 

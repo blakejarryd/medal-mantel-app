@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: theme.roundness,
     color: theme.colors.textPrimary,
-    margin: theme.spacing.s,
+    padding: theme.spacing.s,
+    marginVertical: theme.spacing.s,
   },
 });
 

@@ -16,7 +16,7 @@ const RaceResultItem = ({ raceData, onPress }) => {
       <RaceIcon rank={raceData.rank} event={raceData.event} />
       <View style={styles.content}>
         <Text style={styles.title}>{raceData.raceName}</Text>
-        <Text style={styles.description}>{`${raceData.distance} | ${formatDate(raceData.raceDate)}`}</Text>
+        <Text style={styles.description}>{`${raceData.distance}km | ${formatDate(raceData.raceDate)}`}</Text>
         <Text style={styles.time}>{formatRaceTime(raceData.time)}</Text>
       </View>
     </TouchableOpacity>

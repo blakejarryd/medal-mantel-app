@@ -3,9 +3,9 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import theme from '../../../theme';
 
 const RaceDuration = ({ initialHours, initialMinutes, initialSeconds, onDurationChange }) => {
-  const [hours, setHours] = useState(initialHours);
-  const [minutes, setMinutes] = useState(initialMinutes);
-  const [seconds, setSeconds] = useState(initialSeconds);
+  const [hours, setHours] = useState(initialHours ? initialHours.toString() : '');
+  const [minutes, setMinutes] = useState(initialMinutes ? initialMinutes.toString() : '');
+  const [seconds, setSeconds] = useState(initialSeconds ? initialSeconds.toString() : '');
 
   const updateDuration = () => {
     const newDuration = `${validateNumberInput(hours, 99)}:${validateNumberInput(minutes, 59)}:${validateNumberInput(seconds, 59)}`;
@@ -82,13 +82,14 @@ const styles = StyleSheet.create({
   timeInputContainer: {
     flexDirection: 'row',
     justifyContent: 'start', // Align items to the center to reduce space around
+    alignItems: 'center',
     marginTop: theme.spacing.xs,
     marginBottom: theme.spacing.xs, // To add some space below the container
   },
   timeInput: {
     backgroundColor: theme.colors.grey, // Set the background color to grey
     width: 50,
-    textAlign: 'left',
+    textAlign: 'center',
     marginHorizontal: theme.spacing.xs, // Add horizontal margin for spacing between inputs
     height: 45, // Match the height of other inputs
     borderRadius: theme.roundness, // Match the border radius of other inputs

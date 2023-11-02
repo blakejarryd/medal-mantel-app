@@ -3,7 +3,7 @@ import { View, Text, Button, Platform, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import theme from '../../../theme';
 
-const RaceDate = ({ label, value, onDateSelected, style }) => {
+const RaceDate = ({ value, onDateSelected, style }) => {
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const onDateChange = (event, selectedDate) => {
@@ -63,7 +63,7 @@ const RaceDate = ({ label, value, onDateSelected, style }) => {
 
   return (
     <View style={style}>
-      <Text>{label}</Text>
+      <Text style={styles.label}>Race Date</Text>
       <View style={styles.dateContainer}>
         {renderDatePicker()}
       </View>
@@ -72,6 +72,11 @@ const RaceDate = ({ label, value, onDateSelected, style }) => {
 };
 
 const styles = StyleSheet.create({
+  label: {
+    fontSize: theme.fontSizes.medium,
+    marginTop: theme.spacing.s,
+    color: theme.colors.textPrimary,
+  },
   dateContainer: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -65,7 +65,6 @@ const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
             <ScrollView contentContainerStyle={styles.scrollView}>
             <RaceName raceName={raceName} setRaceName={setRaceName} styles={styles} />
             <RaceDate
-              label="Race Date"
               value={eventDate}
               onDateSelected={setEventDate} 
               style={styles.dateContainer}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, Menu, Portal, Provider, Text, TextInput } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -11,12 +11,16 @@ import RaceDistance from './RaceDistance'
 import RaceDuration from './RaceDuration'
 import FormButtons from './FormButtons'
 
-const AddRaceModal = ({ isVisible, onClose, onSubmit }) => {
+const RaceFormModal = ({ isVisible, onClose, onSubmit, event }) => {
   const [raceName, setRaceName] = useState('');
   const [eventDate, setEventDate] = useState(new Date());
-  const [eventName, setEventName] = useState('');
+  const [eventName, setEventName] = useState(event ? event : '');;
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
+
+  useEffect(() => {
+    setEventName(event);
+  }, [event]);
 
   const resetForm = () => {
     setRaceName('');
@@ -104,4 +108,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddRaceModal;
+export default RaceFormModal;

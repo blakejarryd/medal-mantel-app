@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import PBSwimLane from './PBSwimLane';
@@ -8,12 +8,20 @@ import theme from '../../../theme';
 const MyRacesScreen = ({ data, onNewRaceData }) => {
   const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
   const [isRaceModalVisible, setRaceModalVisible] = useState(false);
+  const [event, setEvent] = useState(null);
 
   const [sortByDate, setSortByDate] = useState(false);
 
-  const onAddRace = () => {
+  const onAddRace = (event) => {
+    setEvent(event);
     setRaceModalVisible(true);
   }
+
+  useEffect(() => {
+    if (event) {
+      setRaceModalVisible(true);
+    }
+  }, [event]); 
 
   const compareTimes = (timeA, timeB) => {
     const [hoursA, minutesA, secondsA] = timeA.split(':').map(Number);
@@ -37,17 +45,28 @@ const MyRacesScreen = ({ data, onNewRaceData }) => {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        <ScrollView>
-          {events.map(eventType => {
-            const races = getRacesByEventType(eventType);
-            return <PBSwimLane key={eventType} title={eventType} raceDataList={races} onAddRace={onAddRace}  />;
-          })}
-        </ScrollView>
+      <ScrollView>
+        {events.map(eventType => {
+          const races = getRacesByEventType(eventType);
+          return (
+            <PBSwimLane
+              key={eventType}
+              title={eventType}
+              raceDataList={races}
+              onAddRace={() => onAddRace(eventType)} 
+            />
+          ); 
+        })} 
+      </ScrollView>
         <RaceFormModal
-          isVisible={isRaceModalVisible}
-          onClose={() => setRaceModalVisible(false)}
-          onSubmit={onNewRaceData}
-        />
+        isVisible={isRaceModalVisible}
+        onClose={() => {
+          setRaceModalVisible(false);
+          setEvent(null); // Reset event when closing the modal
+        }}
+        onSubmit={onNewRaceData}
+        event={event}
+      />
       </View>
     </SafeAreaView>
   );

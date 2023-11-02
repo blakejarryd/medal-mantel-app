@@ -5,7 +5,7 @@ import { useTheme } from 'react-native-paper';
 import FilterSortComponent from '../Filters/FilterSortComponent';
 import RaceResultItem from './RaceResultItem';
 import FloatingButton from './AddFloatingButton';
-import AddRaceModal from '../../SharedComponents/AddRaceModal';
+import RaceFormModal from '../../SharedComponents/RaceFormModal/RaceFormModal';
 import FilterButton from '../Filters/FilterFloatingButton';
 import NoRaceView from './NoRaceView'
 import { useNavigation } from '@react-navigation/native';
@@ -17,7 +17,7 @@ const RaceResultsList = ({ data, onNewRaceData }) => {
   const [sortDirection, setSortDirection] = useState('desc');
   const [filter, setFilter] = useState('all');
   const [displayedData, setDisplayedData] = useState([]);
-  const [isAddRaceModalVisible, setAddRaceModalVisible] = useState(false);
+  const [isRaceModalVisible, setRaceModalVisible] = useState(false);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const navigation = useNavigation();
 
@@ -113,13 +113,13 @@ const RaceResultsList = ({ data, onNewRaceData }) => {
            filterModalVisible={filterModalVisible}
            onClose={() => setFilterModalVisible(false)}
          />
-         <AddRaceModal
-           isVisible={isAddRaceModalVisible}
-           onClose={() => setAddRaceModalVisible(false)}
+         <RaceFormModal
+           isVisible={isRaceModalVisible}
+           onClose={() => setRaceModalVisible(false)}
            onSubmit={onNewRaceData}
          />
-         <FloatingButton onPress={() => setAddRaceModalVisible(true)} />
-         <FilterButton onFilterPress={() => setFilterModalVisible(true)} /> 
+         <FloatingButton onPress={() => setRaceModalVisible(true)} />
+         {/* <FilterButton onFilterPress={() => setFilterModalVisible(true)} />  */}
       </SafeAreaView>
     );
 };

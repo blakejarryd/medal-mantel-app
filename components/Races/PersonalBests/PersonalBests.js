@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import PBSwimLane from './PBSwimLane';
-import AddRaceModal from '../../SharedComponents/AddRaceModal';
+import RaceFormModal from '../../SharedComponents/RaceFormModal/RaceFormModal';
 import theme from '../../../theme';
 
 const MyRacesScreen = ({ data, onNewRaceData }) => {
   const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
-  const [isAddRaceModalVisible, setAddRaceModalVisible] = useState(false);
+  const [isRaceModalVisible, setRaceModalVisible] = useState(false);
 
   const [sortByDate, setSortByDate] = useState(false);
 
   const onAddRace = () => {
-    setAddRaceModalVisible(true);
+    setRaceModalVisible(true);
   }
 
   const compareTimes = (timeA, timeB) => {
@@ -43,9 +43,9 @@ const MyRacesScreen = ({ data, onNewRaceData }) => {
             return <PBSwimLane key={eventType} title={eventType} raceDataList={races} onAddRace={onAddRace}  />;
           })}
         </ScrollView>
-        <AddRaceModal
-          isVisible={isAddRaceModalVisible}
-          onClose={() => setAddRaceModalVisible(false)}
+        <RaceFormModal
+          isVisible={isRaceModalVisible}
+          onClose={() => setRaceModalVisible(false)}
           onSubmit={onNewRaceData}
         />
       </View>

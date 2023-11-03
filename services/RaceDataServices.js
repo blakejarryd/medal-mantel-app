@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { v4 as uuidv4 } from 'uuid';
 
 const RACE_DATA_KEY = 'raceData';
 
@@ -23,16 +24,27 @@ const saveRaceData = async (newData) => {
 
 const addNewRace = async (newRace) => {
   const currentData = await getRaceData();
-  const updatedData = [...currentData, newRace];
+  const newRaceWithId = { ...newRace, id: uuidv4() };
+  const updatedData = [...currentData, newRaceWithId];
   await saveRaceData(updatedData);
   return updatedData; // Return updated data for immediate use
 };
 
-// ... Include other CRUD operations similarly
+const deleteRace = async (raceId) => {
+  try {
+    const currentData = await getRaceData();
+    const updatedData = currentData.filter(race => race.id !== raceId);
+    await saveRaceData(updatedData);
+    return updatedData; // Return updated data for immediate use
+  } catch (e) {
+    console.error("Failed to delete the race", e);
+    // Handle the error according to your needs
+  }
+};
 
 export default {
   getRaceData,
   saveRaceData,
   addNewRace,
-  // ... export other CRUD operations
+  deleteRace,
 };

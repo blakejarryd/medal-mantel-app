@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import RaceResultDetails from '../Races/MyRaces/RaceResultDetails';
+import RaceResultDetails from '../Races/RaceResultDetails/RaceResultDetails';
 import BottomTabNavigator from './BottomTabNavigator';
 import theme from '../../theme';
 
@@ -50,7 +50,23 @@ const AppNavigator = () => {
           }
         }}
       />
-      <Stack.Screen name="ResultDetails" component={RaceResultDetails} />
+      <Stack.Screen
+        name="ResultDetails"
+        component={RaceResultDetails}
+        options={{
+          headerShown: true,
+          presentation: 'modal',
+          title: 'Race Details', // Static title for the ResultDetails screen
+          headerStyle: {
+            backgroundColor: theme.colors.background,
+          },
+          headerTitleStyle: {
+            color: theme.colors.primary,
+            fontWeight: 'bold',
+          },
+          // Add more options as needed
+        }}
+      />
     </Stack.Navigator>
   );
 };

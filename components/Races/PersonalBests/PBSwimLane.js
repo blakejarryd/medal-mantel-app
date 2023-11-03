@@ -16,7 +16,7 @@ const PBSwimLane = ({ title, raceDataList, onAddRace }) => {
             <RaceCard key={index} raceData={raceData} />
         ))}
         {/* Render the placeholder card at the end */}
-        <PBAddRaceCard title={title} onPress={onAddRace} />
+        <PBAddRaceCard title={title} onPress={() => onAddRace(title)} />
       </ScrollView>
     </View>
   );

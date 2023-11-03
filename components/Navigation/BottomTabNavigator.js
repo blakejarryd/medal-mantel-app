@@ -9,7 +9,7 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { rankRaces } from '../../utilities/raceDataUtils';
 import checkDataExistsAndSetMockData from '../../utilities/populateAsyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RaceDataProvider from '../Races/RaceDataProvider';
+import RaceDataProvider from '../../services/RaceDataProvider';
 
 const BottomTabNavigator = ({ setActiveRouteName }) => {
   const [index, setIndex] = React.useState(0);
@@ -23,14 +23,10 @@ const BottomTabNavigator = ({ setActiveRouteName }) => {
 
   const sceneMap = {
     myraces: () => (
-      <RaceDataProvider>
         <RaceResultsList />
-      </RaceDataProvider>
     ),
     personalbests: () => (
-      <RaceDataProvider>
         <MyRacesScreen />
-      </RaceDataProvider>
     ),
     // settings: Settings,
   };

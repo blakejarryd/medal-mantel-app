@@ -6,13 +6,16 @@ import { PaperProvider } from 'react-native-paper';
 import theme from './theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppNavigator from './components/Navigation/AppNavigator'
+import RaceDataProvider from './services/RaceDataProvider'
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <PaperProvider>
         <NavigationContainer>
-          <AppNavigator />
+          <RaceDataProvider>
+            <AppNavigator />
+          </RaceDataProvider>
         </NavigationContainer>
       </PaperProvider>
     </SafeAreaProvider>

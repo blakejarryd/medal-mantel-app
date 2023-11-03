@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { RaceDataContext } from '../../../services/RaceDataProvider';
 import PBSwimLane from './PBSwimLane';
-import RaceFormModal from '../../SharedComponents/RaceFormModal/RaceFormModal';
+import RaceFormModal from '../RaceFormModal/RaceFormModal';
 import theme from '../../../theme';
 
-const MyRacesScreen = ({ data, onNewRaceData }) => {
+const MyRacesScreen = () => {
+  const { raceData, onNewRaceData } = useContext(RaceDataContext);
   const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
   const [isRaceModalVisible, setRaceModalVisible] = useState(false);
-  const [event, setEvent] = useState(null);
-
-  const [sortByDate, setSortByDate] = useState(false);
-
-  const onAddRace = (event) => {
-    setEvent(event);
-    setRaceModalVisible(true);
-  }
-
-  useEffect(() => {
-    if (event) {
-      setRaceModalVisible(true);
-    }
-  }, [event]); 
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const compareTimes = (timeA, timeB) => {
     const [hoursA, minutesA, secondsA] = timeA.split(':').map(Number);
@@ -34,39 +23,44 @@ const MyRacesScreen = ({ data, onNewRaceData }) => {
   };
   
   const getRacesByEventType = (eventType) => {
-    const races = data.filter(race => race.event === eventType);
-    
-    return sortByDate 
-      ? races.sort((a, b) => new Date(b.raceDate) - new Date(a.raceDate))
-      : races.sort((a, b) => compareTimes(a.time, b.time));
+    const races = raceData.filter(race => race.event === eventType);
+    return races.sort((a, b) => compareTimes(a.time, b.time));
   };
   
+  const onAddRace = (eventType) => {
+    setSelectedEvent(eventType);
+    setRaceModalVisible(true);
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-      <ScrollView>
-        {events.map(eventType => {
-          const races = getRacesByEventType(eventType);
-          return (
-            <PBSwimLane
-              key={eventType}
-              title={eventType}
-              raceDataList={races}
-              onAddRace={() => onAddRace(eventType)} 
-            />
-          ); 
-        })} 
-      </ScrollView>
+        <ScrollView>
+          {events.map(eventType => {
+            const races = getRacesByEventType(eventType);
+            return (
+              <PBSwimLane
+                key={eventType}
+                title={eventType}
+                raceDataList={races}
+                onAddRace={() => onAddRace(eventType)} 
+              />
+            ); 
+          })}
+        </ScrollView>
         <RaceFormModal
-        isVisible={isRaceModalVisible}
-        onClose={() => {
-          setRaceModalVisible(false);
-          setEvent(null); // Reset event when closing the modal
-        }}
-        onSubmit={onNewRaceData}
-        event={event}
-      />
+          isVisible={isRaceModalVisible}
+          onClose={() => {
+            setRaceModalVisible(false);
+            setSelectedEvent(null); // Reset selected event when closing the modal
+          }}
+          onSubmit={(newRace) => {
+            onNewRaceData({...newRace, event: selectedEvent}); // Include the selected event type when submitting new race data
+            setRaceModalVisible(false); // Close the modal upon submission
+            setSelectedEvent(null); // Reset selected event type after submission
+          }}
+          event={selectedEvent}
+        />
       </View>
     </SafeAreaView>
   );
@@ -89,5 +83,3 @@ const styles = StyleSheet.create({
 });
 
 export default MyRacesScreen;
-
-

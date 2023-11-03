@@ -9,7 +9,7 @@ const PBAddRaceCard = ({ title, onPress }) => {
         <TouchableOpacity onPress={onPress}>
             <Card style={styles.card}>
                 <View style={styles.cardContent}>
-                <MaterialCommunityIcons name="medal-outline" size={50} color={theme.colors.grey} />
+                <MaterialCommunityIcons name="plus" size={50} color={theme.colors.grey} />
                     <Text style={styles.text}>Add {title} result</Text>
                 </View>
             </Card>
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
-        fontSize: theme.fontSizes.medium,
-        color: theme.colors.primaryText,
+        fontSize: theme.fontSizes.small,
+        color: theme.colors.secondaryText,
         marginTop: theme.spacing.s,
     },
 });

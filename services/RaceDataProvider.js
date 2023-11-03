@@ -1,7 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, createContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { rankRaces } from '../../utilities/raceDataUtils';
-import RaceDataServices from '../../services/RaceDataServices';
+import { rankRaces } from '../utilities/raceDataUtils';
+import RaceDataServices from './RaceDataServices';
+
+export const RaceDataContext = createContext({
+  raceData: [],
+  onNewRaceData: () => {},
+  onDeleteRaceData: () => {},
+});
 
 const RaceDataProvider = ({ children }) => {
   const [raceDataState, setRaceDataState] = useState([]);
@@ -37,11 +43,28 @@ const RaceDataProvider = ({ children }) => {
     }
   }, []);
 
-  const childrenWithProps = React.Children.map(children, child =>
-    React.cloneElement(child, { data: rankRaces(raceDataState), onNewRaceData: handleNewRaceData })
-  );
+  const handleDeleteRaceData = useCallback(async (raceId) => {
+    try {
+      console.log('Before deletion', raceDataState);
+      const updatedData = await RaceDataServices.deleteRace(raceId);
+      console.log('After deletion', updatedData);
+      setRaceDataState(rankRaces(updatedData));
+      await AsyncStorage.setItem('raceData', JSON.stringify(updatedData));
+    } catch (error) {
+      console.error('Error deleting race data', error);
+    }
+  }, [raceDataState]);
 
-  return <>{childrenWithProps}</>;
+
+  return (
+    <RaceDataContext.Provider value={{
+      raceData: rankRaces(raceDataState), // make sure to rank the races before providing them
+      onNewRaceData: handleNewRaceData,
+      onDeleteRaceData: handleDeleteRaceData
+    }}>
+      {children}
+    </RaceDataContext.Provider>
+  );
 };
 
 export default RaceDataProvider;

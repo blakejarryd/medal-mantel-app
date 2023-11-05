@@ -12,6 +12,7 @@ import theme from '../../../theme';
 
 
 const RaceResultDetails = ({ route, navigation }) => {
+  const { onDeleteRaceData, onUpdateRaceData } = useContext(RaceDataContext);
   const raceData = route.params.raceData;
   const [isRaceModalVisible, setRaceModalVisible] = useState(false);
 
@@ -37,7 +38,6 @@ const RaceResultDetails = ({ route, navigation }) => {
       await onDeleteRaceData(raceData.id);
       navigation.goBack(); 
     } catch (e) {
-      // Handle errors, perhaps show an alert or toast message
       console.log("Error", "Failed to delete the race");
     }
   };
@@ -46,18 +46,12 @@ const RaceResultDetails = ({ route, navigation }) => {
     setRaceModalVisible(true);
   };
 
-  const handleSubmit = async (updatedRaceData) => {
-    // Call the update function with the race id and the updated data
+  const handleSubmit = async (data) => {
     try {
-      await RaceDataServices.updateRace(raceData.id, updatedRaceData);
-      // Update async storage after successful update
-      // Assuming `updatedRaceData` includes the full race object after update
-      await AsyncStorage.setItem('raceData', JSON.stringify(updatedRaceData));
-      // Optionally, refresh the page or navigate back
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error updating race data', error);
-      // Handle the error, show a message to the user if needed
+      await onUpdateRaceData(data.id, data);
+      navigation.goBack(); 
+    } catch (e) {
+      console.log("Error", "Failed to update the race");
     }
   };
 
@@ -88,7 +82,7 @@ const RaceResultDetails = ({ route, navigation }) => {
             isVisible={isRaceModalVisible}
             onClose={() => setRaceModalVisible(false)}
             onSubmit={handleSubmit}
-            raceData={raceData} // You'll need to make sure RaceFormModal can handle this prop
+            raceData={raceData} 
           />
         )
       }

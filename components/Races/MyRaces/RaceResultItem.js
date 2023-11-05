@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import RaceIcon from './RaceIcon';
+import MedalIcon from '../../SharedComponents/MedalIcon';
 import { formatDate, formatRaceTime } from '../../../utilities/dateAndTimeUtils';
 import theme from '../../../theme';
 
@@ -13,7 +13,7 @@ const RaceResultItem = ({ raceData, onPress }) => {
       <View style={styles.backgroundDistance}>
         <Text style={styles.backgroundDistanceText}>{roundedDistance}</Text>
       </View>
-      <RaceIcon rank={raceData.rank} event={raceData.event} />
+      <MedalIcon rank={raceData.rank} event={raceData.event} />
       <View style={styles.content}>
         <Text style={styles.title}>{raceData.raceName}</Text>
         <Text style={styles.description}>{`${raceData.distance}km | ${formatDate(raceData.raceDate)}`}</Text>

@@ -19,8 +19,6 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   const [duration, setDuration] = useState('');
   const [raceId, setRaceId] = useState(null);
 
-  console.log(raceData)
-
   useEffect(() => {
       setRaceName(raceData?.raceName || '');
       setEventDate(raceData?.raceDate ? new Date(raceData.raceDate) : new Date());

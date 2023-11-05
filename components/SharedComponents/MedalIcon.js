@@ -1,7 +1,7 @@
 import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const RaceIcon = ({ rank, event }) => {
+const MedalIcon = ({ rank, event }) => {
   let icon = "run"; // Default icon for non-ranked
   let color = '#A9A9A9'; // Default color for non-ranked
 
@@ -25,7 +25,7 @@ const RaceIcon = ({ rank, event }) => {
       break;
   }
 
-  return <MaterialCommunityIcons name={icon} size={36} color={color} />;
+  return <MaterialCommunityIcons name={icon} size={30} color={color} />;
 };
 
-export default RaceIcon;
+export default MedalIcon;

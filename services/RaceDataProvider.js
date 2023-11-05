@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, createContext } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { rankRaces } from '../utilities/raceDataUtils';
 import RaceDataServices from './RaceDataServices';
+import { rankRaces } from '../utilities/raceDataUtils'; // Import the rankRaces function
 
 export const RaceDataContext = createContext({
   raceData: [],
   onNewRaceData: () => {},
   onDeleteRaceData: () => {},
+  onUpdateRaceData: () => {},
 });
 
 const RaceDataProvider = ({ children }) => {
@@ -14,30 +14,19 @@ const RaceDataProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeData = async () => {
-      const fetchedData = await fetchDataFromStorage();
-      setRaceDataState(fetchedData);
+      const fetchedData = await RaceDataServices.getRaceData();
+      const rankedData = rankRaces(fetchedData); // Rank the fetched data
+      setRaceDataState(rankedData);
     };
 
     initializeData();
   }, []);
 
-  const fetchDataFromStorage = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('raceData');
-      return jsonValue != null ? JSON.parse(jsonValue) : [];
-    } catch (e) {
-      // In case of an error, you can handle it or return an empty array
-      console.error('Error fetching race data from storage', e);
-      return [];
-    }
-  };
-
   const handleNewRaceData = useCallback(async (newData) => {
     try {
       const updatedData = await RaceDataServices.addNewRace(newData);
-      // Make sure to use rankRaces if necessary before setting the state
-      setRaceDataState(rankRaces(updatedData));
-      await AsyncStorage.setItem('raceData', JSON.stringify(updatedData));
+      const rankedData = rankRaces(updatedData); // Rank the updated data
+      setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error adding new race data', error);
     }
@@ -45,34 +34,33 @@ const RaceDataProvider = ({ children }) => {
 
   const handleDeleteRaceData = useCallback(async (raceId) => {
     try {
-      console.log('Before deletion', raceDataState);
       const updatedData = await RaceDataServices.deleteRace(raceId);
-      console.log('After deletion', updatedData);
-      setRaceDataState(rankRaces(updatedData));
-      await AsyncStorage.setItem('raceData', JSON.stringify(updatedData));
+      const rankedData = rankRaces(updatedData); // Rank the updated data
+      setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error deleting race data', error);
     }
-  }, [raceDataState]);
+  }, []);
 
   const handleUpdateRaceData = useCallback(async (raceId, updates) => {
     try {
       const updatedData = await RaceDataServices.updateRace(raceId, updates);
-      setRaceDataState(rankRaces(updatedData)); 
-      await AsyncStorage.setItem('raceData', JSON.stringify(updatedData));
+      const rankedData = rankRaces(updatedData); // Rank the updated data
+      setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error updating race data', error);
     }
   }, []);
 
-
   return (
-    <RaceDataContext.Provider value={{
-      raceData: rankRaces(raceDataState), // make sure to rank the races before providing them
-      onNewRaceData: handleNewRaceData,
-      onDeleteRaceData: handleDeleteRaceData,
-      onUpdateRaceData: handleUpdateRaceData, 
-    }}>
+    <RaceDataContext.Provider
+      value={{
+        raceData: raceDataState,
+        onNewRaceData: handleNewRaceData,
+        onDeleteRaceData: handleDeleteRaceData,
+        onUpdateRaceData: handleUpdateRaceData,
+      }}
+    >
       {children}
     </RaceDataContext.Provider>
   );

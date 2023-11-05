@@ -1,11 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import theme from '../../../theme';
 
-const RaceDuration = ({ initialHours, initialMinutes, initialSeconds, onDurationChange }) => {
-  const [hours, setHours] = useState(initialHours ? initialHours.toString() : '');
-  const [minutes, setMinutes] = useState(initialMinutes ? initialMinutes.toString() : '');
-  const [seconds, setSeconds] = useState(initialSeconds ? initialSeconds.toString() : '');
+const RaceDuration = ({ duration, onDurationChange }) => {
+  // Parse the initial values for hours, minutes, and seconds from the duration prop
+  const parseDuration = (duration) => {
+    const parts = duration.split(':');
+    return {
+      hours: parts[0] || '',
+      minutes: parts[1] || '',
+      seconds: parts[2] || '',
+    };
+  };
+
+  const initialDuration = parseDuration(duration);
+  const [hours, setHours] = useState(initialDuration.hours);
+  const [minutes, setMinutes] = useState(initialDuration.minutes);
+  const [seconds, setSeconds] = useState(initialDuration.seconds);
+
+  useEffect(() => {
+    // Update state when the duration prop changes
+    const newDuration = parseDuration(duration);
+    setHours(newDuration.hours);
+    setMinutes(newDuration.minutes);
+    setSeconds(newDuration.seconds);
+  }, [duration]);
 
   const updateDuration = () => {
     const newDuration = `${validateNumberInput(hours, 99)}:${validateNumberInput(minutes, 59)}:${validateNumberInput(seconds, 59)}`;

@@ -55,12 +55,23 @@ const RaceDataProvider = ({ children }) => {
     }
   }, [raceDataState]);
 
+  const handleUpdateRaceData = useCallback(async (raceId, updates) => {
+    try {
+      const updatedData = await RaceDataServices.updateRace(raceId, updates);
+      setRaceDataState(rankRaces(updatedData)); 
+      await AsyncStorage.setItem('raceData', JSON.stringify(updatedData));
+    } catch (error) {
+      console.error('Error updating race data', error);
+    }
+  }, []);
+
 
   return (
     <RaceDataContext.Provider value={{
       raceData: rankRaces(raceDataState), // make sure to rank the races before providing them
       onNewRaceData: handleNewRaceData,
-      onDeleteRaceData: handleDeleteRaceData
+      onDeleteRaceData: handleDeleteRaceData,
+      onUpdateRaceData: handleUpdateRaceData, 
     }}>
       {children}
     </RaceDataContext.Provider>

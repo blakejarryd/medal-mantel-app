@@ -1,18 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
 import { Button, Title, Paragraph, IconButton, useTheme, Card } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import { formatDate, formatRaceTime } from '../../../utilities/dateAndTimeUtils';
 import RaceDataServices from '../../../services/RaceDataServices'
 import { RaceDataContext } from '../../../services/RaceDataProvider'
+import RaceFormModal from '../RaceFormModal/RaceFormModal';
 import InfoLine from './InfoLine';
 import Actions from './Actions'; 
 import theme from '../../../theme';
 
 
 const RaceResultDetails = ({ route, navigation }) => {
-  const { onDeleteRaceData } = useContext(RaceDataContext);
   const raceData = route.params.raceData;
+  const [isRaceModalVisible, setRaceModalVisible] = useState(false);
 
   if (!raceData || !raceData.time) {
     console.error('Race data is not available.');
@@ -41,6 +42,25 @@ const RaceResultDetails = ({ route, navigation }) => {
     }
   };
 
+  const handleEditRace = () => {
+    setRaceModalVisible(true);
+  };
+
+  const handleSubmit = async (updatedRaceData) => {
+    // Call the update function with the race id and the updated data
+    try {
+      await RaceDataServices.updateRace(raceData.id, updatedRaceData);
+      // Update async storage after successful update
+      // Assuming `updatedRaceData` includes the full race object after update
+      await AsyncStorage.setItem('raceData', JSON.stringify(updatedRaceData));
+      // Optionally, refresh the page or navigate back
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error updating race data', error);
+      // Handle the error, show a message to the user if needed
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.shadowContainer}>
@@ -55,11 +75,23 @@ const RaceResultDetails = ({ route, navigation }) => {
             </InfoLine>
           </Card.Content>
           <Actions
-            onEdit={() => console.log("Edit")}
+            onEdit={() => {
+              setRaceModalVisible(true);
+              }}
             onDelete={handleDeleteRace}
           />
         </Card>
       </View>
+      {
+        isRaceModalVisible && (
+          <RaceFormModal
+            isVisible={isRaceModalVisible}
+            onClose={() => setRaceModalVisible(false)}
+            onSubmit={handleSubmit}
+            raceData={raceData} // You'll need to make sure RaceFormModal can handle this prop
+          />
+        )
+      }
     </View>
   );
 };

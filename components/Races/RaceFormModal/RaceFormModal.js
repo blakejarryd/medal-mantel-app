@@ -11,16 +11,24 @@ import RaceDistance from './RaceDistance'
 import RaceDuration from './RaceDuration'
 import FormButtons from './FormButtons'
 
-const RaceFormModal = ({ isVisible, onClose, onSubmit, event }) => {
+const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   const [raceName, setRaceName] = useState('');
   const [eventDate, setEventDate] = useState(new Date());
-  const [eventName, setEventName] = useState(event ? event : '');;
+  const [eventName, setEventName] = useState('');;
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
+  const [raceId, setRaceId] = useState(null);
+
+  console.log(raceData)
 
   useEffect(() => {
-    setEventName(event);
-  }, [event]);
+      setRaceName(raceData?.raceName || '');
+      setEventDate(raceData?.raceDate ? new Date(raceData.raceDate) : new Date());
+      setEventName(raceData?.event || event || '');
+      setDistance(raceData?.distance || '');
+      setDuration(raceData?.time || '');
+      setRaceId(raceData?.id || null);
+  }, [raceData, event]);
 
   const resetForm = () => {
     setRaceName('');
@@ -28,6 +36,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event }) => {
     setEventName('');
     setDistance('');
     setDuration('');
+    setRaceId(null);
   };
 
   const handleDurationChange = (newDuration) => {
@@ -41,13 +50,14 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event }) => {
 
   const handleSubmit = async () => {
     const data = {
+      id: raceId,
       raceDate: eventDate.toISOString().split('T')[0],
       raceName: raceName,
       distance: distance, 
       event: eventName,
       time: duration,
     };
-    onSubmit(data)
+    await onSubmit(data)
     resetForm()
     onClose()
   };

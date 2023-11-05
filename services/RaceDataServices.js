@@ -38,7 +38,19 @@ const deleteRace = async (raceId) => {
     return updatedData; // Return updated data for immediate use
   } catch (e) {
     console.error("Failed to delete the race", e);
-    // Handle the error according to your needs
+  }
+};
+
+const updateRace = async (raceId, raceUpdates) => {
+  try {
+    const currentData = await getRaceData();
+    const updatedData = currentData.map(race =>
+      race.id === raceId ? { ...race, ...raceUpdates } : race
+    );
+    await saveRaceData(updatedData);
+    return updatedData; // Return updated data for immediate use
+  } catch (e) {
+    console.error("Failed to update the race", e);
   }
 };
 
@@ -47,4 +59,5 @@ export default {
   saveRaceData,
   addNewRace,
   deleteRace,
+  updateRace,
 };

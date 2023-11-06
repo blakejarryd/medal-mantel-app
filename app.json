@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RunSubApp",
-    "slug": "RunSubApp",
+    "name": "Medal Mantel",
+    "slug": "medal-mantel",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.blakejarryd.medalmantel"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.blakejarryd.medalmantel"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d6f24f33-30e6-4378-bbf7-6445be963294"
+      }
+    },
+    "owner": "blakejarryd"
   }
 }

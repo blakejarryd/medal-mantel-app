@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { Button, Menu, Portal, Provider, Text, TextInput } from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import RaceDataServices from '../../../services/RaceDataServices'
+import { Portal, Provider } from 'react-native-paper';
 import theme from '../../../theme';
 import RaceName from './RaceName'
 import RaceDate from './RaceDate'
@@ -47,6 +44,10 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   };
 
   const handleSubmit = async () => {
+    if (!isFormValid()) {
+      alert('Please fill in all fields.');
+      return;
+    }
     const data = {
       id: raceId,
       raceDate: eventDate.toISOString().split('T')[0],
@@ -59,6 +60,11 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
     resetForm()
     onClose()
   };
+
+  const isFormValid = () => {
+    return raceName.trim() && eventName.trim() && distance.trim() && duration.trim();
+  };
+  
 
   return (
     <Provider>
@@ -91,7 +97,11 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
               duration={duration}
               onDurationChange={handleDurationChange}
             />
-            <FormButtons onSave={handleSubmit} onCancel={handleClose} />
+            <FormButtons 
+              onSave={handleSubmit} 
+              onCancel={handleClose}
+              isSaveDisabled={!isFormValid()} 
+            />
             </ScrollView>
             </KeyboardAvoidingView>
           </View>

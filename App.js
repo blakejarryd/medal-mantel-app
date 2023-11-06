@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomTabNavigator from './components/Navigation/BottomTabNavigator'; // Import the new BottomTabNavigator
 import { StyleSheet } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
@@ -10,15 +11,17 @@ import RaceDataProvider from './services/RaceDataProvider'
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <PaperProvider>
-        <NavigationContainer>
-          <RaceDataProvider>
-            <AppNavigator />
-          </RaceDataProvider>
-        </NavigationContainer>
-      </PaperProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <PaperProvider>
+          <NavigationContainer>
+            <RaceDataProvider>
+              <AppNavigator />
+            </RaceDataProvider>
+          </NavigationContainer>
+        </PaperProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

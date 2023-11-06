@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: theme.colors.surface, 
     borderRadius: theme.roundness,
-    padding: theme.spacing.m,
+    padding: theme.spacing.s,
     margin: theme.spacing.s,
     alignItems: 'center',
     shadowColor: theme.colors.shadow,

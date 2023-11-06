@@ -8,8 +8,8 @@ const FloatingButton = ({ icon = 'plus', onPress, style }) => (
     style={{ ...styles.fab, ...style, backgroundColor: theme.colors.primary }} 
     icon={icon} 
     onPress={onPress}
-    color= {theme.colors.secondary}          // White color for the icon
-    small={false}            // Making sure we're using the standard size for better visibility
+    color= {theme.colors.secondary}         
+    small={false}            
   />
 );
 

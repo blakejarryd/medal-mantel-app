@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { BottomNavigation } from 'react-native-paper';
 import RaceResultsList from '../Races/MyRaces/RaceResultsList';
 import MyRacesScreen from '../Races/PersonalBests/PersonalBests';
@@ -7,12 +7,10 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 const BottomTabNavigator = ({ setActiveRouteName }) => {
   const [index, setIndex] = React.useState(0);
-  const [raceDataState, setRaceDataState] = useState([]);
 
   const [routes] = React.useState([
     { key: 'myraces', title: 'My Races' },
     { key: 'personalbests', title: 'Personal Bests' },
-    // { key: 'settings', title: 'Settings' },
   ]);
 
   const sceneMap = {
@@ -22,7 +20,6 @@ const BottomTabNavigator = ({ setActiveRouteName }) => {
     personalbests: () => (
         <MyRacesScreen />
     ),
-    // settings: Settings,
   };
 
   const renderIcon = (props) => {

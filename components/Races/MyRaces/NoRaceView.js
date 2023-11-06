@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   welcomeIllustration: {
     width: '100%',
-    height: 200, // or any other dimensions you prefer
+    height: 200, 
     resizeMode: 'contain',
     marginBottom: 20,
   },

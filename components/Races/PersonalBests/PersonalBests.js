@@ -33,7 +33,7 @@ const MyRacesScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
+    <View style={styles.safeAreaContainer}>
       <View style={styles.container}>
         <ScrollView>
           {events.map(eventType => {
@@ -52,28 +52,29 @@ const MyRacesScreen = () => {
           isVisible={isRaceModalVisible}
           onClose={() => {
             setRaceModalVisible(false);
-            setSelectedEvent(null); // Reset selected event when closing the modal
+            setSelectedEvent(null); 
           }}
           onSubmit={(newRace) => {
-            onNewRaceData({...newRace, event: selectedEvent}); // Include the selected event type when submitting new race data
-            setRaceModalVisible(false); // Close the modal upon submission
-            setSelectedEvent(null); // Reset selected event type after submission
+            onNewRaceData({...newRace, event: selectedEvent}); 
+            setRaceModalVisible(false); 
+            setSelectedEvent(null); 
           }}
           event={selectedEvent}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   safeAreaContainer: {
-    flex: 1, // Fill the entire screen
+    flex: 1, 
     backgroundColor: theme.colors.altBackground, 
     paddingLeft: theme.spacing.m,
+    paddingTop: theme.spacing.s,
   },
   container: {
-    flex: 1, // Allow this container to expand and fill available space
+    flex: 1, 
   },
   title: {
     fontSize: theme.fontSizes.large,

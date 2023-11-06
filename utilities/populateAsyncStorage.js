@@ -13,7 +13,7 @@ const checkDataExistsAndSetMockData = async (mockRaceData) => {
   try {
     const existingData = await AsyncStorage.getItem('raceData');
     if (existingData === null) {
-      await setMockData(mockRaceData); // Added await here
+      await setMockData(mockRaceData); 
     }
   } catch (e) {
     console.error("Error checking and setting mock data: ", e);

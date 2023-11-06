@@ -9,12 +9,10 @@ const Stack = createStackNavigator();
 const AppNavigator = () => {
   const [activeRouteName, setActiveRouteName] = useState('myraces'); // Start with 'myraces' as default
 
-  // Callback to set the active route name
   const handleSetActiveRouteName = useCallback((routeName) => {
     setActiveRouteName(routeName);
   }, []);
 
-  // Dynamic header title based on the active route
   const getHeaderTitle = () => {
     switch (activeRouteName) {
       case 'myraces':
@@ -56,7 +54,7 @@ const AppNavigator = () => {
         options={{
           headerShown: true,
           presentation: 'modal',
-          title: 'Race Details', // Static title for the ResultDetails screen
+          title: 'Race Details', 
           headerStyle: {
             backgroundColor: theme.colors.background,
           },
@@ -64,7 +62,6 @@ const AppNavigator = () => {
             color: theme.colors.primary,
             fontWeight: 'bold',
           },
-          // Add more options as needed
         }}
       />
     </Stack.Navigator>

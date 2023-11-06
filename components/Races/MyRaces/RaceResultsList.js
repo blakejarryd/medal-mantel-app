@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FlatList, StyleSheet, StatusBar, Text } from 'react-native';
+import { FlatList, StyleSheet, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RaceResultItem from './RaceResultItem';
 import FloatingButton from './AddFloatingButton';
@@ -18,7 +18,7 @@ const RaceResultsList = () => {
     if (raceData && raceData.length > 0) {
       return (
         <FlatList
-          data={raceData} // Use raceData directly from context
+          data={raceData} 
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <RaceResultItem 
@@ -34,7 +34,7 @@ const RaceResultsList = () => {
   };
   
   return ( 
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
        {renderContent()} 
        <RaceFormModal
          isVisible={isRaceModalVisible}
@@ -42,14 +42,15 @@ const RaceResultsList = () => {
          onSubmit={onNewRaceData}
        />
        <FloatingButton onPress={() => setRaceModalVisible(true)} />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.altBackground
+    backgroundColor: theme.colors.altBackground,
+    paddingTop: theme.spacing.m,
   },
 });
 

@@ -6,15 +6,22 @@ const RaceDuration = ({ duration, onDurationChange }) => {
   const [time, setTime] = useState(parseDuration(duration));
 
   useEffect(() => {
-    setTime(parseDuration(duration));
+    if (duration) {
+      setTime(parseDuration(duration));
+    }
   }, [duration]);
 
   useEffect(() => {
-    onDurationChange(formatDuration(time));
+    if (time.hours || time.minutes || time.seconds) {
+      onDurationChange(formatDuration(time));
+    }
   }, [time]);
 
   function parseDuration(duration) {
-    const parts = duration.split(':');
+    if (!duration) {
+      return { hours: '', minutes: '', seconds: '' };
+    }
+    const parts = duration.split(':').map((part) => part.padStart(2, '0'));
     return {
       hours: parts[0] || '00',
       minutes: parts[1] || '00',
@@ -23,24 +30,34 @@ const RaceDuration = ({ duration, onDurationChange }) => {
   }
 
   function formatDuration({ hours, minutes, seconds }) {
-    return `${validateNumberInput(hours, 99)}:${validateNumberInput(minutes, 59)}:${validateNumberInput(seconds, 59)}`;
+    return `${hours ? hours.padStart(2, '0') : '00'}:${minutes ? minutes.padStart(2, '0') : '00'}:${seconds ? seconds.padStart(2, '0') : '00'}`;
   }
 
   const validateNumberInput = (value, max) => {
+    if (value === '') {
+      return '';
+    }
     let num = parseInt(value, 10);
     if (isNaN(num) || num < 0) {
       return '00';
     }
     if (num > max) {
-      return max.toString().padStart(2, '0');
+      return max.toString();
     }
-    return num.toString().padStart(2, '0');
+    return num.toString();
   };
 
   const handleTimeChange = (part, value) => {
-    setTime(prev => ({
+    setTime((prev) => ({
       ...prev,
-      [part]: validateNumberInput(value, part === 'hours' ? 99 : 59),
+      [part]: value,
+    }));
+  };
+
+  const handleBlur = (part) => {
+    setTime((prev) => ({
+      ...prev,
+      [part]: validateNumberInput(prev[part], part === 'hours' ? 99 : 59).padStart(2, '0'),
     }));
   };
 
@@ -51,6 +68,7 @@ const RaceDuration = ({ duration, onDurationChange }) => {
         <TextInput
           value={time.hours}
           onChangeText={(value) => handleTimeChange('hours', value)}
+          onBlur={() => handleBlur('hours')}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="HH"
@@ -59,6 +77,7 @@ const RaceDuration = ({ duration, onDurationChange }) => {
         <TextInput
           value={time.minutes}
           onChangeText={(value) => handleTimeChange('minutes', value)}
+          onBlur={() => handleBlur('minutes')}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="MM"
@@ -67,6 +86,7 @@ const RaceDuration = ({ duration, onDurationChange }) => {
         <TextInput
           value={time.seconds}
           onChangeText={(value) => handleTimeChange('seconds', value)}
+          onBlur={() => handleBlur('seconds')}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="SS"
@@ -84,20 +104,20 @@ const styles = StyleSheet.create({
   },
   timeInputContainer: {
     flexDirection: 'row',
-    justifyContent: 'start', // Align items to the center to reduce space around
+    justifyContent: 'start', 
     alignItems: 'center',
     marginTop: theme.spacing.xs,
-    marginBottom: theme.spacing.xs, // To add some space below the container
+    marginBottom: theme.spacing.xs, 
   },
   timeInput: {
-    backgroundColor: theme.colors.grey, // Set the background color to grey
+    backgroundColor: theme.colors.grey, 
     width: 50,
     textAlign: 'center',
-    marginHorizontal: theme.spacing.xs, // Add horizontal margin for spacing between inputs
-    height: 45, // Match the height of other inputs
-    borderRadius: theme.roundness, // Match the border radius of other inputs
+    marginHorizontal: theme.spacing.xs, 
+    height: 45, 
+    borderRadius: theme.roundness, 
     color: theme.colors.textPrimary,
-    fontSize: theme.fontSizes.medium, // Optional, to match font size of other inputs
+    fontSize: theme.fontSizes.medium, 
   },
   timeSeperator: {
     alignSelf: 'center',

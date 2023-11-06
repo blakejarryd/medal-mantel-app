@@ -6,24 +6,22 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance }) => {
   const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
   const distances = { '5k': '5', '10k': '10', 'Half Marathon': '21.1', 'Marathon': '42.2' };
 
-  // Effect for auto-updating distance when eventName is provided or changed
+
   useEffect(() => {
-    // Check if eventName is one of the predefined events and distance is not set
     if (eventName in distances && !distance) {
       setDistance(distances[eventName]);
     }
-  }, [eventName, distances, distance, setDistance]); // Dependencies array includes anything used inside the effect
+  }, [eventName, distances, distance, setDistance]); 
   
   const isSelected = (event) => eventName === event;
 
   const handleEventSelection = (event) => {
     setEventName(event);
-    // Set the distance if it's a predefined event, otherwise reset it.
     if (event in distances) {
       setDistance(distances[event]);
     } else {
-      // If 'Ultra' or 'Other' is selected, clear the distance or keep the current input
-      if (eventName !== event) { // Check if different event is selected to avoid overriding the user input
+     
+      if (eventName !== event) { 
         setDistance('');
       }
     }

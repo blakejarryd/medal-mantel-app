@@ -41,11 +41,10 @@ const styles = StyleSheet.create({
     flex: 0.48,
   },
   colors: {
-    primary: theme.colors.primary, // your primary color
-    surface: theme.colors.surface, // your surface color
-    disabled: '#D3D3D3', // light grey color for disabled state background
-    disabledText: '#A9A9A9' // darker grey color for disabled state text
-    // other colors...
+    primary: theme.colors.primary, 
+    surface: theme.colors.surface,
+    disabled: '#D3D3D3', 
+    disabledText: '#A9A9A9' 
   }
 });
 

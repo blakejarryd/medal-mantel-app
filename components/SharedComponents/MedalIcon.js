@@ -2,10 +2,10 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const MedalIcon = ({ rank, event }) => {
-  let icon = "run"; // Default icon for non-ranked
-  let color = '#A9A9A9'; // Default color for non-ranked
+  let icon = "run"; 
+  let color = '#A9A9A9'; 
 
-  // If it's an ultra marathon and not top 3
+  // If it's an ultra marathon 
   if (event === 'Ultra Marathon') {
     icon = "terrain";
   }
@@ -25,7 +25,7 @@ const MedalIcon = ({ rank, event }) => {
       break;
   }
 
-  return <MaterialCommunityIcons name={icon} size={30} color={color} />;
+  return <MaterialCommunityIcons name={icon} size={28} color={color} />;
 };
 
 export default MedalIcon;

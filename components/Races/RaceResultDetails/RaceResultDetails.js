@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: theme.roundness,
     backgroundColor: 'white', 
-    overflow: 'hidden',
   },
   title: {
     fontSize: theme.fontSizes.large, 

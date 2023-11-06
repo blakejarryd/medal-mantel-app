@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import BottomTabNavigator from './components/Navigation/BottomTabNavigator'; // Import the new BottomTabNavigator
+import { GestureHandlerRootView } from 'react-native-gesture-handler';import BottomTabNavigator from './components/Navigation/BottomTabNavigator'; // Import the new BottomTabNavigator
 import { StyleSheet } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import theme from './theme';
@@ -29,6 +28,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    marginTop: 100
   },
 });

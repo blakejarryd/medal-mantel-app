@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, createContext } from 'react';
 import RaceDataServices from './RaceDataServices';
-import { rankRaces } from '../utilities/raceDataUtils'; // Import the rankRaces function
+import { rankRaces } from '../utilities/raceDataUtils'; 
 
 export const RaceDataContext = createContext({
   raceData: [],
@@ -15,7 +15,7 @@ const RaceDataProvider = ({ children }) => {
   useEffect(() => {
     const initializeData = async () => {
       const fetchedData = await RaceDataServices.getRaceData();
-      const rankedData = rankRaces(fetchedData); // Rank the fetched data
+      const rankedData = rankRaces(fetchedData); 
       setRaceDataState(rankedData);
     };
 
@@ -25,7 +25,7 @@ const RaceDataProvider = ({ children }) => {
   const handleNewRaceData = useCallback(async (newData) => {
     try {
       const updatedData = await RaceDataServices.addNewRace(newData);
-      const rankedData = rankRaces(updatedData); // Rank the updated data
+      const rankedData = rankRaces(updatedData); 
       setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error adding new race data', error);
@@ -35,7 +35,7 @@ const RaceDataProvider = ({ children }) => {
   const handleDeleteRaceData = useCallback(async (raceId) => {
     try {
       const updatedData = await RaceDataServices.deleteRace(raceId);
-      const rankedData = rankRaces(updatedData); // Rank the updated data
+      const rankedData = rankRaces(updatedData);
       setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error deleting race data', error);
@@ -45,7 +45,7 @@ const RaceDataProvider = ({ children }) => {
   const handleUpdateRaceData = useCallback(async (raceId, updates) => {
     try {
       const updatedData = await RaceDataServices.updateRace(raceId, updates);
-      const rankedData = rankRaces(updatedData); // Rank the updated data
+      const rankedData = rankRaces(updatedData);
       setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error updating race data', error);

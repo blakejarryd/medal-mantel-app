@@ -51,7 +51,6 @@ const RaceCard = ({ raceData }) => {
         },
         textWrapper: {
           flex: 1,
-          minHeight: 80, 
         },
         time: {
           fontSize: theme.fontSizes.medium,
@@ -59,13 +58,13 @@ const RaceCard = ({ raceData }) => {
           fontWeight: 'bold',
         },
         raceName: {
-          fontSize: theme.fontSizes.medium,
+          fontSize: theme.fontSizes.small,
           fontWeight: 'bold',
           color: theme.colors.primaryText,
           marginTop: theme.spacing.s,
         },
         raceDate: {
-          fontSize: theme.fontSizes.medium,
+          fontSize: theme.fontSizes.small,
           color: theme.colors.secondaryText,
           marginTop: theme.spacing.s,
         },

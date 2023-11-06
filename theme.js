@@ -1,16 +1,16 @@
 export default {
   colors: {
-    primary: '#098DD0',     // Typically for main buttons, icons, headers, etc.
-    secondary: '#FABB39',  // For secondary buttons, highlights, etc.
-    background: '#EBF6F2', // General background color
-    altBackground: '#F0F2F1', // Alternative background for maybe cards or modals
-    textPrimary: '#333',   // Primary text color (you can adjust as needed)
-    textSecondary: '#777', // Secondary text color (adjust as needed)
-    surface: 'white',      // Background color for surfaces like cards
-    grey: '#eeeeee',       // Light gray color for secondary or background elements
-    shadow: '#000',        // Shadow color
-    primaryText: '#212121', // Primary text color
-    secondaryText: '#757575', // Secondary text color
+    primary: '#4A4A4A',     // A dark gray for main buttons, icons, headers, etc., based on the darker parts of the icon.
+    secondary: '#A3A3A3',   // A lighter gray for secondary buttons, highlights, etc., taken from the medium shades of the icon.
+    background: '#FFFFFF',   // A white background, as the icon is also presented on a white background.
+    altBackground: '#E5E5E5', // An off-white/very light gray for cards or modals, similar to the lightest parts of the icon.
+    textPrimary: '#1A1A1A',  // A very dark gray, almost black for primary text, providing high contrast on the white background.
+    textSecondary: '#636363', // A medium-dark gray for secondary text, still ensuring good readability.
+    surface: '#FFFFFF',      // The surface could remain white to keep the clean appearance.
+    grey: '#CCCCCC',         // A standard light gray for secondary or background elements.
+    shadow: '#000000',       // Shadow color remains black for contrast.
+    primaryText: '#212121',  // Primary text color is a dark gray for readability.
+    secondaryText: '#757575', // Secondary text color is a lighter gray.
   },
 
   spacing: {

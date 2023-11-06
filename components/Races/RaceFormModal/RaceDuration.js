@@ -3,33 +3,28 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import theme from '../../../theme';
 
 const RaceDuration = ({ duration, onDurationChange }) => {
-  // Parse the initial values for hours, minutes, and seconds from the duration prop
-  const parseDuration = (duration) => {
-    const parts = duration.split(':');
-    return {
-      hours: parts[0] || '',
-      minutes: parts[1] || '',
-      seconds: parts[2] || '',
-    };
-  };
-
-  const initialDuration = parseDuration(duration);
-  const [hours, setHours] = useState(initialDuration.hours);
-  const [minutes, setMinutes] = useState(initialDuration.minutes);
-  const [seconds, setSeconds] = useState(initialDuration.seconds);
+  const [time, setTime] = useState(parseDuration(duration));
 
   useEffect(() => {
-    // Update state when the duration prop changes
-    const newDuration = parseDuration(duration);
-    setHours(newDuration.hours);
-    setMinutes(newDuration.minutes);
-    setSeconds(newDuration.seconds);
+    setTime(parseDuration(duration));
   }, [duration]);
 
-  const updateDuration = () => {
-    const newDuration = `${validateNumberInput(hours, 99)}:${validateNumberInput(minutes, 59)}:${validateNumberInput(seconds, 59)}`;
-    onDurationChange(newDuration); 
-  };
+  useEffect(() => {
+    onDurationChange(formatDuration(time));
+  }, [time]);
+
+  function parseDuration(duration) {
+    const parts = duration.split(':');
+    return {
+      hours: parts[0] || '00',
+      minutes: parts[1] || '00',
+      seconds: parts[2] || '00',
+    };
+  }
+
+  function formatDuration({ hours, minutes, seconds }) {
+    return `${validateNumberInput(hours, 99)}:${validateNumberInput(minutes, 59)}:${validateNumberInput(seconds, 59)}`;
+  }
 
   const validateNumberInput = (value, max) => {
     let num = parseInt(value, 10);
@@ -42,19 +37,11 @@ const RaceDuration = ({ duration, onDurationChange }) => {
     return num.toString().padStart(2, '0');
   };
 
-  const handleBlurHours = () => {
-    setHours(validateNumberInput(hours, 99));
-    updateDuration();
-  };
-
-  const handleBlurMinutesOrSeconds = (setter, value) => {
-    setter(validateNumberInput(value, 59));
-    updateDuration();
-  };
-
-  // You can create a function to get the duration in the format you want
-  const getDuration = () => {
-    return `${validateNumberInput(hours, 99)}:${validateNumberInput(minutes, 59)}:${validateNumberInput(seconds, 59)}`;
+  const handleTimeChange = (part, value) => {
+    setTime(prev => ({
+      ...prev,
+      [part]: validateNumberInput(value, part === 'hours' ? 99 : 59),
+    }));
   };
 
   return (
@@ -62,27 +49,24 @@ const RaceDuration = ({ duration, onDurationChange }) => {
       <Text style={styles.label}>Time</Text>
       <View style={styles.timeInputContainer}>
         <TextInput
-          value={hours}
-          onChangeText={setHours}
-          onBlur={handleBlurHours}
+          value={time.hours}
+          onChangeText={(value) => handleTimeChange('hours', value)}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="HH"
         />
         <Text style={styles.timeSeparator}>:</Text>
         <TextInput
-          value={minutes}
-          onChangeText={setMinutes}
-          onBlur={() => handleBlurMinutesOrSeconds(setMinutes, minutes)}
+          value={time.minutes}
+          onChangeText={(value) => handleTimeChange('minutes', value)}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="MM"
         />
         <Text style={styles.timeSeparator}>:</Text>
         <TextInput
-          value={seconds}
-          onChangeText={setSeconds}
-          onBlur={() => handleBlurMinutesOrSeconds(setSeconds, seconds)}
+          value={time.seconds}
+          onChangeText={(value) => handleTimeChange('seconds', value)}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="SS"

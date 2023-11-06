@@ -2,14 +2,8 @@ import React, {useEffect, useState} from 'react';
 import { BottomNavigation } from 'react-native-paper';
 import RaceResultsList from '../Races/MyRaces/RaceResultsList';
 import MyRacesScreen from '../Races/PersonalBests/PersonalBests';
-import Settings from '../Settings/Settings';
-import raceData from '../../raceData';
 import theme from '../../theme';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { rankRaces } from '../../utilities/raceDataUtils';
-import checkDataExistsAndSetMockData from '../../utilities/populateAsyncStorage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import RaceDataProvider from '../../services/RaceDataProvider';
 
 const BottomTabNavigator = ({ setActiveRouteName }) => {
   const [index, setIndex] = React.useState(0);

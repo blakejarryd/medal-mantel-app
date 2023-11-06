@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import RaceCard from './PBCard';
 import PBAddRaceCard from './PBAddRaceCard';
 import theme from '../../../theme';

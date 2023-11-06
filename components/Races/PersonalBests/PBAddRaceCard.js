@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         borderWidth: 1, 
         borderColor: theme.colors.grey,
         borderStyle: 'dashed', 
-        backgroundColor: 'transparent', 
+        backgroundColor: theme.colors.altBackground,
         justifyContent: 'center',
         alignItems: 'center',
         width: 165,

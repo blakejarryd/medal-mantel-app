@@ -11,14 +11,25 @@ import theme from '../../../theme';
 
 const RaceResultsList = () => {
   const { raceData, onNewRaceData } = useContext(RaceDataContext);
+  const [sortedRaceData, setSortedRaceData] = useState([]);
   const [isRaceModalVisible, setRaceModalVisible] = useState(false);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (raceData && raceData.length > 0) {
+      const sortedData = [...raceData].sort((a, b) => {
+        // Assuming `date` is a string in ISO format, 'YYYY-MM-DD'
+        return new Date(b.raceDate) - new Date(a.raceDate);
+      });
+      setSortedRaceData(sortedData);
+    }
+  }, [raceData]);
   
   const renderContent = () => {
-    if (raceData && raceData.length > 0) {
+    if (sortedRaceData.length > 0) { // Use sortedRaceData here
       return (
         <FlatList
-          data={raceData} 
+          data={sortedRaceData} // Use sortedRaceData here
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <RaceResultItem 

@@ -17,7 +17,16 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {},
+    "production": {
+      "ios": {
+        "bundleIdentifier": "com.example.yourapp",
+        "buildType": "app-store"
+      },
+      "android": {
+        "package": "com.example.yourapp",
+        "buildType": "app-bundle"
+      }
+    },
     "simulator": {
       "ios": {
         "simulator": true,
@@ -26,6 +35,16 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "blakejarrydjohnston@gmail.com",
+        "ascAppId": "your-app-store-connect-app-id",
+        "appleTeamId": "NAVFS6288A"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./path/to/your-service-account-key.json",
+        "track": "production"
+      }
+    }
   }
 }

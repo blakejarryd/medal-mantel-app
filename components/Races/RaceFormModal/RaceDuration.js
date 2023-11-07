@@ -1,64 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import theme from '../../../theme';
 
-const RaceDuration = ({ duration, onDurationChange }) => {
-  const [time, setTime] = useState(parseDuration(duration));
-
-  useEffect(() => {
-    if (duration) {
-      setTime(parseDuration(duration));
-    }
-  }, [duration]);
-
-  useEffect(() => {
-    if (time.hours || time.minutes || time.seconds) {
-      onDurationChange(formatDuration(time));
-    }
-  }, [time]);
-
-  function parseDuration(duration) {
-    if (!duration) {
-      return { hours: '', minutes: '', seconds: '' };
-    }
-    const parts = duration.split(':').map((part) => part.padStart(2, '0'));
-    return {
-      hours: parts[0] || '00',
-      minutes: parts[1] || '00',
-      seconds: parts[2] || '00',
-    };
-  }
-
-  function formatDuration({ hours, minutes, seconds }) {
-    return `${hours ? hours.padStart(2, '0') : '00'}:${minutes ? minutes.padStart(2, '0') : '00'}:${seconds ? seconds.padStart(2, '0') : '00'}`;
-  }
+const RaceDuration = ({
+  hours,
+  minutes,
+  seconds,
+  setHours,
+  setMinutes,
+  setSeconds,
+}) => {
 
   const validateNumberInput = (value, max) => {
-    if (value === '') {
-      return '';
-    }
     let num = parseInt(value, 10);
     if (isNaN(num) || num < 0) {
-      return '00';
+      return '';
     }
     if (num > max) {
-      return max.toString();
+      num = max;
     }
-    return num.toString();
+    return num.toString().padStart(2, '0');
   };
 
   const handleTimeChange = (part, value) => {
-    setTime((prev) => ({
-      ...prev,
-      [part]: value,
-    }));
+    const validatedValue = validateNumberInput(value, part === 'hours' ? 99 : 59);
+    if (part === 'hours') {
+      setHours(validatedValue);
+    } else if (part === 'minutes') {
+      setMinutes(validatedValue);
+    } else if (part === 'seconds') {
+      setSeconds(validatedValue);
+    }
   };
 
-  const handleBlur = (part) => {
-    setTime((prev) => ({
-      ...prev,
-      [part]: validateNumberInput(prev[part], part === 'hours' ? 99 : 59).padStart(2, '0'),
-    }));
+  const handleFocus = (part) => {
+    if (part === 'hours') {
+      setHours('');
+    } else if (part === 'minutes') {
+      setMinutes('');
+    } else if (part === 'seconds') {
+      setSeconds('');
+    }
   };
 
   return (
@@ -66,27 +48,27 @@ const RaceDuration = ({ duration, onDurationChange }) => {
       <Text style={styles.label}>Time</Text>
       <View style={styles.timeInputContainer}>
         <TextInput
-          value={time.hours}
+          value={hours}
           onChangeText={(value) => handleTimeChange('hours', value)}
-          onBlur={() => handleBlur('hours')}
+          onFocus={() => handleFocus('hours')}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="HH"
         />
         <Text style={styles.timeSeparator}>:</Text>
         <TextInput
-          value={time.minutes}
+          value={minutes}
           onChangeText={(value) => handleTimeChange('minutes', value)}
-          onBlur={() => handleBlur('minutes')}
+          onFocus={() => handleFocus('minutes')}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="MM"
         />
         <Text style={styles.timeSeparator}>:</Text>
         <TextInput
-          value={time.seconds}
+          value={seconds}
           onChangeText={(value) => handleTimeChange('seconds', value)}
-          onBlur={() => handleBlur('seconds')}
+          onFocus={() => handleFocus('seconds')}
           style={styles.timeInput}
           keyboardType="numeric"
           placeholder="SS"
@@ -104,20 +86,20 @@ const styles = StyleSheet.create({
   },
   timeInputContainer: {
     flexDirection: 'row',
-    justifyContent: 'start', 
+    justifyContent: 'start', // Align items to the center to reduce space around
     alignItems: 'center',
     marginTop: theme.spacing.xs,
-    marginBottom: theme.spacing.xs, 
+    marginBottom: theme.spacing.xs, // To add some space below the container
   },
   timeInput: {
-    backgroundColor: theme.colors.grey, 
+    backgroundColor: theme.colors.grey, // Set the background color to grey
     width: 50,
     textAlign: 'center',
-    marginHorizontal: theme.spacing.xs, 
-    height: 45, 
-    borderRadius: theme.roundness, 
+    marginHorizontal: theme.spacing.xs, // Add horizontal margin for spacing between inputs
+    height: 45, // Match the height of other inputs
+    borderRadius: theme.roundness, // Match the border radius of other inputs
     color: theme.colors.textPrimary,
-    fontSize: theme.fontSizes.medium, 
+    fontSize: theme.fontSizes.medium, // Optional, to match font size of other inputs
   },
   timeSeperator: {
     alignSelf: 'center',

@@ -13,7 +13,9 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   const [eventDate, setEventDate] = useState(new Date());
   const [eventName, setEventName] = useState('');;
   const [distance, setDistance] = useState('');
-  const [duration, setDuration] = useState('');
+  const [hours, setHours] = useState('');
+  const [minutes, setMinutes] = useState('');
+  const [seconds, setSeconds] = useState('');
   const [raceId, setRaceId] = useState(null);
 
   useEffect(() => {
@@ -21,7 +23,16 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       setEventDate(raceData?.raceDate ? new Date(raceData.raceDate) : new Date());
       setEventName(raceData?.event || event || '');
       setDistance(raceData?.distance || '');
-      setDuration(raceData?.time || '');
+      if (raceData?.time) {
+        const timeParts = raceData.time.split(':');
+        setHours(timeParts[0] || '00');
+        setMinutes(timeParts[1] || '00');
+        setSeconds(timeParts[2] || '00');
+      } else {
+        setHours('');
+        setMinutes('');
+        setSeconds('');
+      }
       setRaceId(raceData?.id || null);
   }, [raceData, event]);
 
@@ -30,7 +41,9 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
     setEventDate(new Date());
     setEventName('');
     setDistance('');
-    setDuration('');
+    setHours('');
+    setMinutes('');
+    setSeconds('');
     setRaceId(null);
   };
 
@@ -44,8 +57,12 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   };
 
   const handleSubmit = async () => {
+    function formatDuration(hours, minutes, seconds) {
+      return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
+    }
+    const formattedDuration = formatDuration(hours, minutes, seconds);
     if (!isFormValid()) {
-      alert('Please fill in all fields.');
+      alert('Please fill in all fields correctly.');
       return;
     }
     const data = {
@@ -54,7 +71,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       raceName: raceName,
       distance: distance, 
       event: eventName,
-      time: duration,
+      time: formattedDuration,
     };
     await onSubmit(data)
     resetForm()
@@ -62,7 +79,12 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   };
 
   const isFormValid = () => {
-    return raceName.trim() && eventName.trim() && distance.trim() && duration.trim();
+    // Check if raceName, eventName, and distance are not empty
+    const basicDetailsFilled = raceName.trim() && eventName.trim() && distance.trim();
+    // Check if any of the time components have a value
+    const timeEntered = hours.trim() || minutes.trim() || seconds.trim();
+  
+    return basicDetailsFilled && timeEntered;
   };
   
 
@@ -94,7 +116,12 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
               setDistance={setDistance}
             />
             <RaceDuration
-              duration={duration}
+              hours={hours}
+              setHours={setHours}
+              minutes={minutes}
+              setMinutes={setMinutes}
+              seconds={seconds}
+              setSeconds={setSeconds}
               onDurationChange={handleDurationChange}
             />
             <FormButtons 

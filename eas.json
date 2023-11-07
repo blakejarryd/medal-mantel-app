@@ -18,20 +18,8 @@
       "distribution": "internal"
     },
     "production": {
-      "ios": {
-        "bundleIdentifier": "com.example.yourapp",
-        "buildType": "app-store"
-      },
-      "android": {
-        "package": "com.example.yourapp",
-        "buildType": "app-bundle"
-      }
-    },
-    "simulator": {
-      "ios": {
-        "simulator": true,
-        "distribution": "internal"
-      }
+      "releaseChannel": "production",
+      "distribution": "store"
     }
   },
   "submit": {

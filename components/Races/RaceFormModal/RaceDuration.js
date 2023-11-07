@@ -45,7 +45,7 @@ const RaceDuration = ({
 
   return (
     <>
-      <Text style={styles.label}>Time</Text>
+      <Text style={styles.label}>Finish Time</Text>
       <View style={styles.timeInputContainer}>
         <TextInput
           value={hours}

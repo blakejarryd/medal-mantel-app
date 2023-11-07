@@ -16,7 +16,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.blakejarryd.medalmantel"
+      "bundleIdentifier": "com.blakejarryd.medalmantel",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {

@@ -20,16 +20,16 @@ const TimeInput = ({ value, onChange, onFocus, placeholder }) => {
   };
 
   return (
-    <View style={[styles.inputSection]}>
-      <TextInput
-        value={value}
-        onChangeText={handleTimeChange}
-        onFocus={onFocus}
-        style={styles.timeInput}
-        keyboardType="numeric"
-        placeholder={placeholder}
-      />
-    </View>
+      <View style={[styles.inputSection]}>
+        <TextInput
+          value={value}
+          onChangeText={handleTimeChange}
+          onFocus={onFocus}
+          style={styles.timeInput}
+          keyboardType="numeric"
+          placeholder={placeholder}
+        />
+      </View>
   );
 };
 

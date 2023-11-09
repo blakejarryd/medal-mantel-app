@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard  } from 'react-native';
 import theme from '../../theme';
 import { RaceDataContext } from '../../services/RaceDataProvider';
 import TimeCalculator from './TimeCalculator';
@@ -17,49 +17,55 @@ const Calculator = () => {
   const [paceMinutes, setPaceMinutes] = useState('');
   const [paceSeconds, setPaceSeconds] = useState('');
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.cardWrapper}>
-        <View style={styles.paceCalculatorCard}>
-          <Text style={styles.paceCalculatorTitle}>Pace Calculator</Text>
-          <TimeCalculator
-            hours={hours}
-            minutes={minutes}
-            seconds={seconds}
-            setHours={setHours}
-            setMinutes={setMinutes}
-            setSeconds={setSeconds}
-            paceMinutes={paceMinutes}
-            paceSeconds={paceSeconds}
-            distance={distance}
-          />
-          <View style={styles.cardSeparator} />
-          <DistanceCalculator
-            hours={hours}
-            minutes={minutes}
-            seconds={seconds}
-            distance={distance}
-            paceMinutes={paceMinutes}
-            paceSeconds={paceSeconds}
-            setDistance={setDistance}
-            unit={unit}
-            toggleUnit={() => setUnit(unit === 'km' ? 'mi' : 'km')}
-          />
-          <View style={styles.cardSeparator} />
-          <PaceCalculator
-            hours={hours}
-            minutes={minutes}
-            seconds={seconds}
-            distance={distance}
-            paceMinutes={paceMinutes}
-            paceSeconds={paceSeconds}
-            setPaceMinutes={setPaceMinutes}
-            setPaceSeconds={setPaceSeconds}
-            unit={unit}
-          />
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.cardWrapper}>
+          <View style={styles.paceCalculatorCard}>
+            <Text style={styles.paceCalculatorTitle}>Pace Calculator</Text>
+            <TimeCalculator
+              hours={hours}
+              minutes={minutes}
+              seconds={seconds}
+              setHours={setHours}
+              setMinutes={setMinutes}
+              setSeconds={setSeconds}
+              paceMinutes={paceMinutes}
+              paceSeconds={paceSeconds}
+              distance={distance}
+            />
+            <View style={styles.cardSeparator} />
+            <DistanceCalculator
+              hours={hours}
+              minutes={minutes}
+              seconds={seconds}
+              distance={distance}
+              paceMinutes={paceMinutes}
+              paceSeconds={paceSeconds}
+              setDistance={setDistance}
+              unit={unit}
+              toggleUnit={() => setUnit(unit === 'km' ? 'mi' : 'km')}
+            />
+            <View style={styles.cardSeparator} />
+            <PaceCalculator
+              hours={hours}
+              minutes={minutes}
+              seconds={seconds}
+              distance={distance}
+              paceMinutes={paceMinutes}
+              paceSeconds={paceSeconds}
+              setPaceMinutes={setPaceMinutes}
+              setPaceSeconds={setPaceSeconds}
+              unit={unit}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </ TouchableWithoutFeedback >
   );
 };
 

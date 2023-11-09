@@ -21,7 +21,7 @@ const PaceCalculator = ({ hours, minutes, seconds, distance, paceMinutes, paceSe
 
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>{`Pace per ${unit === 'km' ? 'Kilometer' : 'Mile'}`}</Text>
+      <Text style={styles.cardTitle}>{`Pace per ${unit === 'km' ? 'kilometer' : 'mile'}`}</Text>
       <View style={styles.inputSection}>
         <PaceInput
           minutes={paceMinutes}

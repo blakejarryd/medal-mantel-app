@@ -23,12 +23,6 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   const [isKilometers, setIsKilometers] = useState(distanceUnit === 'km');
   const [convertedDistance, setConvertedDistance] = useState(''); 
 
-  console.log(raceData?.distance)
-  console.log(isKilometers)
-  console.log(distance)
-  console.log(convertedDistance)
-  console.log(eventName)
-
   useEffect(() => {
       setRaceName(raceData?.raceName || '');
       setEventDate(raceData?.raceDate ? new Date(raceData.raceDate) : new Date());
@@ -74,7 +68,6 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
 
   const handleClose = () => {
     resetForm();
-    console.log("hello")
     onClose(); 
   };
 
@@ -101,7 +94,6 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       event: eventName,
       time: formattedDuration,
     };
-    console.log(convertedDistance)
     await onSubmit(data)
     resetForm()
     onClose()

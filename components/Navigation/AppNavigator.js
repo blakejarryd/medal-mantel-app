@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RaceResultDetails from '../Races/RaceResultDetails/RaceResultDetails';
+import Calculator from '../Calculator/Calculator';
 import BottomTabNavigator from './BottomTabNavigator';
 import Settings from '../Settings/Settings';
 import theme from '../../theme';
@@ -20,6 +21,8 @@ const AppNavigator = () => {
         return 'My Races';
       case 'personalbests':
         return 'Personal Bests';
+        case 'calculator': 
+        return 'Calculator';
       case 'settings':
         return 'Settings';
       default:
@@ -56,6 +59,21 @@ const AppNavigator = () => {
           headerShown: true,
           presentation: 'modal',
           title: 'Race Details', 
+          headerStyle: {
+            backgroundColor: theme.colors.background,
+          },
+          headerTitleStyle: {
+            color: theme.colors.primary,
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="Calculator"
+        component={Calculator} // Add the Calculator component
+        options={{
+          headerShown: true,
+          title: 'Calculator', 
           headerStyle: {
             backgroundColor: theme.colors.background,
           },

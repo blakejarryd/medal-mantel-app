@@ -2,12 +2,13 @@ import React, { useState, useCallback } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RaceResultDetails from '../Races/RaceResultDetails/RaceResultDetails';
 import BottomTabNavigator from './BottomTabNavigator';
+import Settings from '../Settings/Settings';
 import theme from '../../theme';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
-  const [activeRouteName, setActiveRouteName] = useState('myraces'); // Start with 'myraces' as default
+  const [activeRouteName, setActiveRouteName] = useState('myraces'); 
 
   const handleSetActiveRouteName = useCallback((routeName) => {
     setActiveRouteName(routeName);
@@ -55,6 +56,21 @@ const AppNavigator = () => {
           headerShown: true,
           presentation: 'modal',
           title: 'Race Details', 
+          headerStyle: {
+            backgroundColor: theme.colors.background,
+          },
+          headerTitleStyle: {
+            color: theme.colors.primary,
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          headerShown: true,
+          title: 'Settings', 
           headerStyle: {
             backgroundColor: theme.colors.background,
           },

@@ -1,9 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
-import { Button, Title, Paragraph, IconButton, useTheme, Card } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import React, { useContext, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Title, Card } from 'react-native-paper';
 import { formatDate, formatRaceTime } from '../../../utilities/dateAndTimeUtils';
-import RaceDataServices from '../../../services/RaceDataServices'
+import { formatRaceDistance } from '../../../utilities/raceDataUtils'; 
 import { RaceDataContext } from '../../../services/RaceDataProvider'
 import RaceFormModal from '../RaceFormModal/RaceFormModal';
 import InfoLine from './InfoLine';
@@ -12,7 +11,7 @@ import theme from '../../../theme';
 
 
 const RaceResultDetails = ({ route, navigation }) => {
-  const { onDeleteRaceData, onUpdateRaceData } = useContext(RaceDataContext);
+  const { onDeleteRaceData, onUpdateRaceData, distanceUnit } = useContext(RaceDataContext);
   const raceData = route.params.raceData;
   const [isRaceModalVisible, setRaceModalVisible] = useState(false);
 
@@ -26,12 +25,16 @@ const RaceResultDetails = ({ route, navigation }) => {
   const totalTimeMinutes = hours * 60 + minutes + seconds / 60;
 
   // Calculate distance in km
-  const distanceKm = parseFloat(raceData.distance);
+  const distanceInUnit = formatRaceDistance(raceData.distance, distanceUnit, false);
 
   // Calculate average pace per km
-  const avgPace = totalTimeMinutes / distanceKm;
+  const avgPace = totalTimeMinutes / distanceInUnit;
   const avgPaceMinutes = Math.floor(avgPace);
   const avgPaceSeconds = Math.round((avgPace - avgPaceMinutes) * 60);
+
+  // Distance Unit full description
+  const distanceUnitFull = distanceUnit === 'km' ? 'kilometer' : 'mile';
+
 
   const handleDeleteRace = async () => {
     try {
@@ -40,10 +43,6 @@ const RaceResultDetails = ({ route, navigation }) => {
     } catch (e) {
       console.log("Error", "Failed to delete the race");
     }
-  };
-
-  const handleEditRace = () => {
-    setRaceModalVisible(true);
   };
 
   const handleSubmit = async (data) => {
@@ -62,10 +61,10 @@ const RaceResultDetails = ({ route, navigation }) => {
           <Card.Content>
             <Title style={styles.title}>{raceData.raceName}</Title>
             <InfoLine icon="calendar-range">{formatDate(raceData.raceDate)}</InfoLine>
-            <InfoLine icon="map-marker-distance">{raceData.distance + ' km'}</InfoLine>
+            <InfoLine icon="map-marker-distance">{formatRaceDistance(raceData.distance, distanceUnit)}</InfoLine>
             <InfoLine icon="clock-outline">{formatRaceTime(raceData.time)}</InfoLine>
             <InfoLine icon="speedometer">
-              {`${avgPaceMinutes}:${avgPaceSeconds < 10 ? '0' + avgPaceSeconds : avgPaceSeconds} per km`}
+              {`${avgPaceMinutes}:${avgPaceSeconds < 10 ? '0' + avgPaceSeconds : avgPaceSeconds} per ${distanceUnitFull}`}
             </InfoLine>
           </Card.Content>
           <Actions
@@ -76,16 +75,14 @@ const RaceResultDetails = ({ route, navigation }) => {
           />
         </Card>
       </View>
-      {
-        isRaceModalVisible && (
-          <RaceFormModal
-            isVisible={isRaceModalVisible}
-            onClose={() => setRaceModalVisible(false)}
-            onSubmit={handleSubmit}
-            raceData={raceData} 
-          />
-        )
-      }
+      {raceData && (
+        <RaceFormModal
+          isVisible={isRaceModalVisible}
+          onClose={() => setRaceModalVisible(false)}
+          onSubmit={handleSubmit}
+          raceData={raceData}
+        />
+      )}
     </View>
   );
 };

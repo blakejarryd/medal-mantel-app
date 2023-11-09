@@ -1,28 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, TextInput, Text, StyleSheet } from 'react-native';
 import theme from '../../../theme';
 
-const RaceDistance = ({ eventName, setEventName, distance, setDistance }) => {
+const RaceDistance = ({ eventName, setEventName, distance, setDistance, isKilometers, distanceUnitToggle }) => {
   const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
   const distances = { '5k': '5', '10k': '10', 'Half Marathon': '21.1', 'Marathon': '42.2' };
-
+  const [inputDistance, setInputDistance] = useState(distance || '');
 
   useEffect(() => {
     if (eventName in distances && !distance) {
       setDistance(distances[eventName]);
+      setInputDistance(distances[eventName]);
+    } else {
+      const inputValue = parseFloat(inputDistance);
+      setDistance(inputValue);
     }
-  }, [eventName, distances, distance, setDistance]); 
-  
+  }, [eventName, distances, distance, setDistance, inputDistance]);
+
   const isSelected = (event) => eventName === event;
 
   const handleEventSelection = (event) => {
     setEventName(event);
     if (event in distances) {
       setDistance(distances[event]);
+      setInputDistance(distances[event]);
     } else {
-     
-      if (eventName !== event) { 
+      if (eventName !== event) {
         setDistance('');
+        setInputDistance('');
       }
     }
   };
@@ -31,7 +36,7 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance }) => {
     <View>
       <Text style={styles.label}>Distance</Text>
       <View style={styles.verticalButtonGroup}>
-        {events.map(event => (
+        {events.map((event) => (
           <TouchableOpacity
             key={event}
             style={[
@@ -48,13 +53,42 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance }) => {
       </View>
 
       {(eventName === 'Ultra Marathon' || eventName === 'Other') && (
-        <TextInput
-          value={distance}
-          onChangeText={setDistance}
-          style={styles.input}
-          placeholder="Distance in km"
-          keyboardType="numeric"
-        />
+        <>
+          <View style={styles.unitToggleContainer}>
+            <Text style={styles.unitToggleText}>Enter Distance in:</Text>
+            <TouchableOpacity
+              style={[
+                styles.unitToggleButton,
+                isKilometers ? styles.unitToggleButtonSelected : null,
+              ]}
+              onPress={distanceUnitToggle}
+            >
+              <Text style={isKilometers ? styles.unitToggleButtonTextSelected : styles.unitToggleButtonText}>
+                Kilometers
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.unitToggleButton,
+                !isKilometers ? styles.unitToggleButtonSelected : null,
+              ]}
+              onPress={distanceUnitToggle}
+            >
+              <Text style={!isKilometers ? styles.unitToggleButtonTextSelected : styles.unitToggleButtonText}>
+                Miles
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TextInput
+            value={inputDistance}
+            onChangeText={setInputDistance}
+            style={styles.input}
+            placeholder={
+              isKilometers ? 'Enter Distance in kilometers' : 'Enter Distance in miles'
+            }
+            keyboardType="numeric"
+          />
+        </>
       )}
     </View>
   );
@@ -67,9 +101,9 @@ const styles = StyleSheet.create({
     color: theme.colors.textPrimary,
   },
   verticalButtonGroup: {
-    flexDirection: 'row', 
-    flexWrap: 'wrap',     
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     marginVertical: theme.spacing.s,
   },
   buttonWrapper: {
@@ -89,6 +123,35 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
   selectedButtonText: {
+    color: theme.colors.surface,
+  },
+  unitToggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.s,
+  },
+  unitToggleText: {
+    fontSize: theme.fontSizes.medium,
+    color: theme.colors.textPrimary,
+  },
+  unitToggleButton: {
+    padding: 10,
+    borderRadius: theme.roundness,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 5,
+  },
+  unitToggleButtonSelected: {
+    backgroundColor: theme.colors.primary,
+  },
+  unitToggleButtonText: {
+    color: theme.colors.primary,
+  },
+  unitToggleButtonTextSelected: {
     color: theme.colors.surface,
   },
   input: {

@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { Card } from 'react-native-paper';
 import { formatDate, formatRaceTime } from '../../../utilities/dateAndTimeUtils';
+import { formatRaceDistance } from '../../../utilities/raceDataUtils'; 
+import { RaceDataContext } from '../../../services/RaceDataProvider';
 import { useNavigation } from '@react-navigation/native';
 import theme from '../../../theme';
 import MedalIcon from '../../SharedComponents/MedalIcon';
 
 const RaceCard = ({ raceData }) => {
     const navigation = useNavigation();
+    const { distanceUnit } = useContext(RaceDataContext); 
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate('ResultDetails', { raceData })}>
@@ -19,7 +22,7 @@ const RaceCard = ({ raceData }) => {
                     </View>
                     <View style={styles.textWrapper}>
                         <Text style={styles.raceName} numberOfLines={3} ellipsizeMode='tail'>{raceData.raceName}</Text>
-                        <Text style={styles.raceDate}>{formatDate(raceData.raceDate)}</Text>
+                        <Text style={styles.raceDate}>{formatDate(raceData.raceDate)} | {formatRaceDistance(raceData.distance, distanceUnit)}</Text>
                     </View>
                 </View>
             </Card>

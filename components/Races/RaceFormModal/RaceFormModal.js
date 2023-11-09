@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Portal, Provider } from 'react-native-paper';
+import { RaceDataContext } from '../../../services/RaceDataProvider';
 import theme from '../../../theme';
 import RaceName from './RaceName'
 import RaceDate from './RaceDate'
@@ -9,6 +10,8 @@ import RaceDuration from './RaceDuration'
 import FormButtons from './FormButtons'
 
 const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
+  const { distanceUnit } = useContext(RaceDataContext);
+
   const [raceName, setRaceName] = useState('');
   const [eventDate, setEventDate] = useState(new Date());
   const [eventName, setEventName] = useState('');;
@@ -17,12 +20,15 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   const [minutes, setMinutes] = useState('');
   const [seconds, setSeconds] = useState('');
   const [raceId, setRaceId] = useState(null);
+  const [isKilometers, setIsKilometers] = useState(distanceUnit === 'km');
+  const [convertedDistance, setConvertedDistance] = useState(''); 
 
   useEffect(() => {
       setRaceName(raceData?.raceName || '');
       setEventDate(raceData?.raceDate ? new Date(raceData.raceDate) : new Date());
       setEventName(raceData?.event || event || '');
       setDistance(raceData?.distance || '');
+      setIsKilometers(distanceUnit === 'km')
       if (raceData?.time) {
         const timeParts = raceData.time.split(':');
         setHours(timeParts[0] || '00');
@@ -34,7 +40,11 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
         setSeconds('');
       }
       setRaceId(raceData?.id || null);
-  }, [raceData, event]);
+  }, [raceData, event, distanceUnit]);
+
+  useEffect(() => {
+    setConvertedDistance(isKilometers ? distance : (parseFloat(distance) / 1.60934).toFixed(2));
+  }, [isKilometers, distance]);
 
   const resetForm = () => {
     setRaceName('');
@@ -45,6 +55,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
     setMinutes('');
     setSeconds('');
     setRaceId(null);
+    setIsKilometers(distanceUnit === 'km')
   };
 
   const handleDurationChange = (newDuration) => {
@@ -65,11 +76,12 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       alert('Please fill in all fields correctly.');
       return;
     }
+    const convertedDistance = isKilometers ? distance : (parseFloat(distance) * 1.60934).toFixed(2);
     const data = {
       id: raceId,
       raceDate: eventDate.toISOString().split('T')[0],
       raceName: raceName,
-      distance: distance, 
+      distance: convertedDistance, 
       event: eventName,
       time: formattedDuration,
     };
@@ -79,14 +91,16 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   };
 
   const isFormValid = () => {
-    // Check if raceName, eventName, and distance are not empty
-    const basicDetailsFilled = raceName.trim() && eventName.trim() && distance.trim();
-    // Check if any of the time components have a value
+    // Check if raceName, eventName, distance, and time are not empty
+    const basicDetailsFilled = raceName.trim() && eventName.trim() //&& distance.trim();
     const timeEntered = hours.trim() || minutes.trim() || seconds.trim();
   
     return basicDetailsFilled && timeEntered;
   };
-  
+
+  const handleDistanceUnitToggle = () => {
+    setIsKilometers(!isKilometers);
+  };
 
   return (
     <Provider>
@@ -112,8 +126,10 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
             <RaceDistance
               eventName={eventName}
               setEventName={setEventName}
-              distance={distance}
+              distance={convertedDistance}
               setDistance={setDistance}
+              isKilometers={isKilometers}
+              distanceUnitToggle={handleDistanceUnitToggle}
             />
             <RaceDuration
               hours={hours}

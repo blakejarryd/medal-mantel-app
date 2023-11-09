@@ -22,3 +22,23 @@ export const rankRaces = (data) => {
 
   return data;
 };
+
+export const formatRaceDistance = (raceDistance, distanceUnit, formatString = true) => {
+  let convertedDistance = parseFloat(raceDistance);
+  
+  if (distanceUnit === 'mi') {
+    convertedDistance = (convertedDistance * 0.621371).toFixed(1);
+  } else {
+    convertedDistance = convertedDistance.toFixed(1);
+  }
+  
+  if (formatString) {
+    return convertedDistance.replace(/\.0$/, '') + distanceUnit;
+  } else {
+    return parseFloat(convertedDistance);
+  }
+};
+
+
+
+

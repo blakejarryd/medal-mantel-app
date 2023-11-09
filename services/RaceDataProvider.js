@@ -4,6 +4,8 @@ import { rankRaces } from '../utilities/raceDataUtils';
 
 export const RaceDataContext = createContext({
   raceData: [],
+  distanceUnit: 'mi',
+  setDistanceUnit: () => {},
   onNewRaceData: () => {},
   onDeleteRaceData: () => {},
   onUpdateRaceData: () => {},
@@ -11,6 +13,7 @@ export const RaceDataContext = createContext({
 
 const RaceDataProvider = ({ children }) => {
   const [raceDataState, setRaceDataState] = useState([]);
+  const [distanceUnit, setDistanceUnit] = useState('km')
 
   useEffect(() => {
     const initializeData = async () => {
@@ -20,6 +23,11 @@ const RaceDataProvider = ({ children }) => {
     };
 
     initializeData();
+
+    RaceDataServices.getDistanceUnitPreference()
+      .then((unit) => {
+        setDistanceUnit(unit);
+      });
   }, []);
 
   const handleNewRaceData = useCallback(async (newData) => {
@@ -56,9 +64,14 @@ const RaceDataProvider = ({ children }) => {
     <RaceDataContext.Provider
       value={{
         raceData: raceDataState,
+        distanceUnit: distanceUnit,
         onNewRaceData: handleNewRaceData,
         onDeleteRaceData: handleDeleteRaceData,
         onUpdateRaceData: handleUpdateRaceData,
+        setDistanceUnit: (unit) => {
+          setDistanceUnit(unit);
+          RaceDataServices.setDistanceUnitPreference(unit); 
+        },
       }}
     >
       {children}

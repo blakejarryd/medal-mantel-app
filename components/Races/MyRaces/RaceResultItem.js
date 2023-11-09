@@ -1,22 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MedalIcon from '../../SharedComponents/MedalIcon';
 import { formatDate, formatRaceTime } from '../../../utilities/dateAndTimeUtils';
+import { formatRaceDistance } from '../../../utilities/raceDataUtils'; 
+import { RaceDataContext } from '../../../services/RaceDataProvider';
 import theme from '../../../theme';
 
 const RaceResultItem = ({ raceData, onPress }) => {
-
-  const roundedDistance = `${Math.round(parseFloat(raceData.distance))}km`;
+  const { distanceUnit } = useContext(RaceDataContext); 
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => onPress(raceData)}>
       <View style={styles.backgroundDistance}>
-        <Text style={styles.backgroundDistanceText}>{roundedDistance}</Text>
+        <Text style={styles.backgroundDistanceText}>{formatRaceDistance(raceData.distance, distanceUnit)}</Text>
       </View>
       <MedalIcon rank={raceData.rank} event={raceData.event} />
       <View style={styles.content}>
         <Text style={styles.title}>{raceData.raceName}</Text>
-        <Text style={styles.description}>{`${raceData.distance}km | ${formatDate(raceData.raceDate)}`}</Text>
+        <Text style={styles.description}>{formatDate(raceData.raceDate)}</Text>
         <Text style={styles.time}>{formatRaceTime(raceData.time)}</Text>
       </View>
     </TouchableOpacity>

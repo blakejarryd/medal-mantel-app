@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import theme from '../../theme';
+import DistanceUnit from './DistanceUnit';
 
 const Settings = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Settings Screen</Text>
+      <DistanceUnit />
     </View>
   );
 };
@@ -12,8 +14,8 @@ const Settings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: theme.colors.altBackground,
+    paddingTop: theme.spacing.m,
   },
   text: {
     fontSize: 18,

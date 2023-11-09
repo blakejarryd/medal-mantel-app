@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RACE_DATA_KEY = 'raceData';
+const DISTANCE_UNIT_KEY = 'distanceUnit';
 
 const getRaceData = async () => {
   try {
@@ -54,9 +55,29 @@ const updateRace = async (raceId, raceUpdates) => {
   }
 };
 
+const getDistanceUnitPreference = async () => {
+  try {
+    const unit = await AsyncStorage.getItem(DISTANCE_UNIT_KEY);
+    return unit || 'km'; // Default to 'km' if not found in AsyncStorage
+  } catch (e) {
+    console.error('Failed to fetch distance unit preference', e);
+    return 'km'; // Default to 'km' in case of an error
+  }
+};
+
+const setDistanceUnitPreference = async (unit) => {
+  try {
+    await AsyncStorage.setItem(DISTANCE_UNIT_KEY, unit);
+  } catch (e) {
+    console.error('Failed to save distance unit preference', e);
+  }
+};
+
 export default {
   getRaceData,
   addNewRace,
   deleteRace,
   updateRace,
+  getDistanceUnitPreference, 
+  setDistanceUnitPreference,
 };

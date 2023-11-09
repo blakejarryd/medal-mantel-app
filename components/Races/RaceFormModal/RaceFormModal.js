@@ -43,7 +43,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   }, [raceData, event, distanceUnit]);
 
   useEffect(() => {
-    setConvertedDistance(isKilometers ? distance : (parseFloat(distance) / 1.60934).toFixed(2));
+    setConvertedDistance(isKilometers ? distance : (parseFloat(distance) / 1.60934).toFixed(2).toString());
   }, [isKilometers, distance]);
 
   const resetForm = () => {
@@ -76,7 +76,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       alert('Please fill in all fields correctly.');
       return;
     }
-    const convertedDistance = isKilometers ? distance : (parseFloat(distance) * 1.60934).toFixed(2);
+    const convertedDistance = isKilometers ? distance : (parseFloat(distance) * 1.60934).toFixed(2).toString();
     const data = {
       id: raceId,
       raceDate: eventDate.toISOString().split('T')[0],

@@ -64,7 +64,7 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance, isKilome
               onPress={distanceUnitToggle}
             >
               <Text style={isKilometers ? styles.unitToggleButtonTextSelected : styles.unitToggleButtonText}>
-                Kilometers
+                KM
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -75,12 +75,12 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance, isKilome
               onPress={distanceUnitToggle}
             >
               <Text style={!isKilometers ? styles.unitToggleButtonTextSelected : styles.unitToggleButtonText}>
-                Miles
+                Mi
               </Text>
             </TouchableOpacity>
           </View>
           <TextInput
-            value={inputDistance}
+            value={String(inputDistance)}
             onChangeText={setInputDistance}
             style={styles.input}
             placeholder={

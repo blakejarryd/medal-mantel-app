@@ -15,7 +15,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   const [raceName, setRaceName] = useState('');
   const [eventDate, setEventDate] = useState(new Date());
   const [eventName, setEventName] = useState('');;
-  const [distance, setDistance] = useState('');
+  const [distance, setDistance] = useState(0);
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
   const [seconds, setSeconds] = useState('');
@@ -23,11 +23,18 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   const [isKilometers, setIsKilometers] = useState(distanceUnit === 'km');
   const [convertedDistance, setConvertedDistance] = useState(''); 
 
+  console.log(raceData?.distance)
+  console.log(isKilometers)
+  console.log(distance)
+  console.log(convertedDistance)
+  console.log(eventName)
+
   useEffect(() => {
       setRaceName(raceData?.raceName || '');
       setEventDate(raceData?.raceDate ? new Date(raceData.raceDate) : new Date());
       setEventName(raceData?.event || event || '');
-      setDistance(raceData?.distance || '');
+      setDistance(raceData?.distance || 0);
+      setConvertedDistance(raceData?.convertedDistance || '');
       setIsKilometers(distanceUnit === 'km')
       if (raceData?.time) {
         const timeParts = raceData.time.split(':');
@@ -43,14 +50,21 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   }, [raceData, event, distanceUnit]);
 
   useEffect(() => {
-    setConvertedDistance(isKilometers ? distance : (parseFloat(distance) / 1.60934).toFixed(2).toString());
+    if (isKilometers) {
+      setConvertedDistance(distance);
+    } else {
+      const numericDistance = parseFloat(distance);
+      const converted = (numericDistance / 1.60934).toFixed(2).toString();
+      setConvertedDistance(converted);
+      }
   }, [isKilometers, distance]);
 
   const resetForm = () => {
     setRaceName('');
     setEventDate(new Date());
     setEventName('');
-    setDistance('');
+    setDistance(0);
+    setConvertedDistance('')
     setHours('');
     setMinutes('');
     setSeconds('');
@@ -58,12 +72,9 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
     setIsKilometers(distanceUnit === 'km')
   };
 
-  const handleDurationChange = (newDuration) => {
-    setDuration(newDuration);
-  };
-
   const handleClose = () => {
     resetForm();
+    console.log("hello")
     onClose(); 
   };
 
@@ -76,7 +87,12 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       alert('Please fill in all fields correctly.');
       return;
     }
-    const convertedDistance = isKilometers ? distance : (parseFloat(distance) * 1.60934).toFixed(2).toString();
+    let convertedDistance;
+    if (eventName === 'Ultra Marathon' || eventName === 'Other') {
+      convertedDistance = isKilometers ? distance : (parseFloat(distance) * 1.60934).toFixed(2).toString();
+    } else {
+      convertedDistance = distance;
+    }
     const data = {
       id: raceId,
       raceDate: eventDate.toISOString().split('T')[0],
@@ -85,6 +101,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       event: eventName,
       time: formattedDuration,
     };
+    console.log(convertedDistance)
     await onSubmit(data)
     resetForm()
     onClose()
@@ -138,7 +155,6 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
               setMinutes={setMinutes}
               seconds={seconds}
               setSeconds={setSeconds}
-              onDurationChange={handleDurationChange}
             />
             <FormButtons 
               onSave={handleSubmit} 

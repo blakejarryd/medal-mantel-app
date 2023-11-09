@@ -2,14 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import theme from '../../../theme';
 
-const RaceDuration = ({
-  hours,
-  minutes,
-  seconds,
-  setHours,
-  setMinutes,
-  setSeconds,
-}) => {
+const RaceDuration = ({ hours, minutes, seconds, setHours, setMinutes, setSeconds }) => {
 
   const validateNumberInput = (value, max) => {
     let num = parseInt(value, 10);

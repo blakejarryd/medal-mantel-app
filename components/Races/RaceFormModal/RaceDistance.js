@@ -8,14 +8,13 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance, isKilome
   const [inputDistance, setInputDistance] = useState(distance || '');
 
   useEffect(() => {
-    if (eventName in distances && !distance) {
+    if (eventName in distances) {
       setDistance(distances[eventName]);
-      setInputDistance(distances[eventName]);
     } else {
       const inputValue = parseFloat(inputDistance);
       setDistance(inputValue);
     }
-  }, [eventName, distances, distance, setDistance, inputDistance]);
+  }, [eventName, distance, inputDistance]);
 
   const isSelected = (event) => eventName === event;
 
@@ -23,7 +22,6 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance, isKilome
     setEventName(event);
     if (event in distances) {
       setDistance(distances[event]);
-      setInputDistance(distances[event]);
     } else {
       if (eventName !== event) {
         setDistance('');

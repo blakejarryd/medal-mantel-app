@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FlatList, StyleSheet, StatusBar, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { FlatList, StyleSheet, View } from 'react-native';
 import RaceResultItem from './RaceResultItem';
 import FloatingButton from './AddFloatingButton';
 import RaceFormModal from '../RaceFormModal/RaceFormModal';
@@ -16,13 +15,11 @@ const RaceResultsList = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (raceData && raceData.length > 0) {
       const sortedData = [...raceData].sort((a, b) => {
         // Assuming `date` is a string in ISO format, 'YYYY-MM-DD'
         return new Date(b.raceDate) - new Date(a.raceDate);
       });
       setSortedRaceData(sortedData);
-    }
   }, [raceData]);
   
   const renderContent = () => {

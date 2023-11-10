@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 
 const NoRaceView = () => (
   <View style={styles.emptyStateContainer}>
-    <Text style={styles.welcomeTitle}>Welcome to Medal One</Text>
+    <Text style={styles.welcomeTitle}>Welcome to Race Record</Text>
     <Text style={styles.instructions}>
       To get started, add your first race result by tapping the "+" button below.
     </Text>

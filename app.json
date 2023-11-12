@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Race Record",
-    "slug": "race-record",
+    "slug": "medal-mantel",
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,14 +17,15 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.blakejarryd.medalmantel",
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.blakejarryd.medalmantel"
+      "package": "com.blakejarryd.medalmantel",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

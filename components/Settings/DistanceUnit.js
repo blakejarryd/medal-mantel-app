@@ -7,8 +7,8 @@ const DistanceUnit = () => {
   const { distanceUnit, setDistanceUnit } = useContext(RaceDataContext); 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Distance Unit:</Text>
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>Distance Unit</Text>
       <View style={styles.buttonGroup}>
         <TouchableOpacity
           style={[
@@ -48,25 +48,33 @@ const DistanceUnit = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.altBackground,
-    paddingTop: theme.spacing.m,
-    paddingHorizontal: theme.spacing.m,
+  card: {
+    padding: theme.spacing.m,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.roundness,
+    shadowColor: theme.colors.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 6,
+    shadowOpacity: 0.3,
+    elevation: 2,
+    marginBottom: theme.spacing.m,
   },
-  text: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: theme.spacing.s,
+  cardTitle: {
+    fontSize: theme.fontSizes.medium,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.m,
   },
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.s,
   },
   button: {
     flex: 1,
     borderWidth: 1,
+    width: 200,
     borderColor: theme.colors.primary,
     borderRadius: theme.roundness,
     alignItems: 'center',
@@ -78,13 +86,12 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
   },
   unitText: {
-    fontSize: 16,
+    fontSize: theme.fontSizes.small,
     color: theme.colors.primary,
   },
   selectedUnitText: {
     color: theme.colors.surface,
   },
 });
-
 
 export default DistanceUnit;

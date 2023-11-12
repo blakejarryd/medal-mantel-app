@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RACE_DATA_KEY = 'raceData';
 const DISTANCE_UNIT_KEY = 'distanceUnit';
+const PERSONAL_BESTS_KEY = 'personalBests';
 
 const getRaceData = async () => {
   try {
@@ -73,6 +74,47 @@ const setDistanceUnitPreference = async (unit) => {
   }
 };
 
+const getPersonalBests = async () => {
+  try {
+    const existingData = await AsyncStorage.getItem(PERSONAL_BESTS_KEY);
+    return existingData ? JSON.parse(existingData) : {};
+  } catch (e) {
+    console.error('Failed to fetch personal bests', e);
+    return {};
+  }
+};
+
+const saveOrUpdatePersonalBest = async (event, distance) => {
+  try {
+    const personalBests = await getPersonalBests();
+    personalBests[event] = distance;
+    console.log(event, distance)
+    await AsyncStorage.setItem(PERSONAL_BESTS_KEY, JSON.stringify(personalBests));
+  } catch (e) {
+    console.error('Failed to save or update personal best', e);
+  }
+};
+
+const saveOrUpdateMultiplePersonalBests = async (personalBests) => {
+  try {
+    for (const [event, distance] of Object.entries(personalBests)) {
+      await saveOrUpdatePersonalBest(event, distance);
+    }
+  } catch (e) {
+    console.error('Failed to save or update multiple personal bests', e);
+  }
+};
+
+const deletePersonalBest = async (event) => {
+  try {
+    const personalBests = await getPersonalBests();
+    delete personalBests[event];
+    await AsyncStorage.setItem(PERSONAL_BESTS_KEY, JSON.stringify(personalBests));
+  } catch (e) {
+    console.error('Failed to delete personal best', e);
+  }
+};
+
 export default {
   getRaceData,
   addNewRace,
@@ -80,4 +122,8 @@ export default {
   updateRace,
   getDistanceUnitPreference, 
   setDistanceUnitPreference,
+  getPersonalBests,
+  saveOrUpdatePersonalBest,
+  saveOrUpdateMultiplePersonalBests,
+  deletePersonalBest,
 };

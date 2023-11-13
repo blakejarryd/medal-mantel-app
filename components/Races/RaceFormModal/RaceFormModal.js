@@ -10,7 +10,7 @@ import RaceDuration from './RaceDuration'
 import FormButtons from './FormButtons'
 
 const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
-  const { distanceUnit } = useContext(RaceDataContext);
+  const { distanceUnit, personalBests } = useContext(RaceDataContext);
 
   const [raceName, setRaceName] = useState('');
   const [eventDate, setEventDate] = useState(new Date());
@@ -41,7 +41,8 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
         setSeconds('');
       }
       setRaceId(raceData?.id || null);
-  }, [raceData, event, distanceUnit]);
+      console.log(event)
+  }, [raceData, distanceUnit, event]);
 
   useEffect(() => {
     if (isKilometers) {
@@ -81,7 +82,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       return;
     }
     let convertedDistance;
-    if (eventName === 'Ultra Marathon' || eventName === 'Other') {
+    if (eventName === 'Other') {
       convertedDistance = isKilometers ? distance : (parseFloat(distance) * 1.60934).toFixed(2).toString();
     } else {
       convertedDistance = distance;
@@ -91,7 +92,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
       raceDate: eventDate.toISOString().split('T')[0],
       raceName: raceName,
       distance: convertedDistance, 
-      event: eventName,
+      //event: eventName,
       time: formattedDuration,
     };
     await onSubmit(data)
@@ -101,7 +102,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
 
   const isFormValid = () => {
     // Check if raceName, eventName, distance, and time are not empty
-    const basicDetailsFilled = raceName.trim() && eventName.trim() //&& distance.trim();
+    const basicDetailsFilled = raceName.trim() //&& eventName.trim() && distance.trim();
     const timeEntered = hours.trim() || minutes.trim() || seconds.trim();
   
     return basicDetailsFilled && timeEntered;
@@ -135,6 +136,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
             <RaceDistance
               eventName={eventName}
               setEventName={setEventName}
+              personalBests={personalBests}
               distance={convertedDistance}
               setDistance={setDistance}
               isKilometers={isKilometers}

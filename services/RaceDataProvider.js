@@ -18,7 +18,7 @@ const DEFAULT_PERSONAL_BESTS = {
   '5k': '5',
   '10k': '10',
   'Half Marathon': '21.1',
-  'Marathon': '42.2'
+  'Marathon': '42.2',
 };
 
 const RaceDataProvider = ({ children }) => {
@@ -26,24 +26,36 @@ const RaceDataProvider = ({ children }) => {
   const [distanceUnit, setDistanceUnit] = useState('km')
   const [personalBests, setPersonalBests] = useState({});
 
+  // Fetch personal bests
   useEffect(() => {
-    const initializeData = async () => {
-      const fetchedData = await RaceDataServices.getRaceData();
-      const rankedData = rankRaces(fetchedData);
-      setRaceDataState(rankedData);
-
+    const fetchPersonalBests = async () => {
       const fetchedPersonalBests = await RaceDataServices.getPersonalBests();
       if (Object.keys(fetchedPersonalBests).length === 0) {
-        // If no personal bests are stored, set to default values
         setPersonalBests(DEFAULT_PERSONAL_BESTS);
         await RaceDataServices.saveOrUpdateMultiplePersonalBests(DEFAULT_PERSONAL_BESTS);
       } else {
-        // Use the fetched personal bests
         setPersonalBests(fetchedPersonalBests);
       }
     };
-    initializeData();
 
+    fetchPersonalBests();
+  }, []);
+
+  // Fetch and rank race data
+  useEffect(() => {
+    const fetchAndRankRaceData = async () => {
+      const fetchedData = await RaceDataServices.getRaceData();
+      const rankedData = rankRaces(fetchedData, personalBests);
+      setRaceDataState(rankedData);
+    };
+
+    if (Object.keys(personalBests).length > 0) {
+      fetchAndRankRaceData();
+    }
+  }, [personalBests]);
+  
+  // Get distance unit preference
+  useEffect(() => {
     RaceDataServices.getDistanceUnitPreference()
       .then((unit) => {
         setDistanceUnit(unit);
@@ -53,32 +65,32 @@ const RaceDataProvider = ({ children }) => {
   const handleNewRaceData = useCallback(async (newData) => {
     try {
       const updatedData = await RaceDataServices.addNewRace(newData);
-      const rankedData = rankRaces(updatedData); 
+      const rankedData = rankRaces(updatedData, personalBests); 
       setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error adding new race data', error);
     }
-  }, []);
+  }, [personalBests]);
 
   const handleDeleteRaceData = useCallback(async (raceId) => {
     try {
       const updatedData = await RaceDataServices.deleteRace(raceId);
-      const rankedData = rankRaces(updatedData);
+      const rankedData = rankRaces(updatedData, personalBests);
       setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error deleting race data', error);
     }
-  }, []);
+  }, [personalBests]);
 
   const handleUpdateRaceData = useCallback(async (raceId, updates) => {
     try {
       const updatedData = await RaceDataServices.updateRace(raceId, updates);
-      const rankedData = rankRaces(updatedData);
+      const rankedData = rankRaces(updatedData, personalBests);
       setRaceDataState(rankedData);
     } catch (error) {
       console.error('Error updating race data', error);
     }
-  }, []);
+  }, [personalBests]);
 
   const handleSetPersonalBest = useCallback(async (event, distance) => {
     try {

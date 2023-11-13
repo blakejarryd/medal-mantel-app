@@ -3,22 +3,16 @@ const timeToSeconds = (time) => {
   return hours * 3600 + minutes * 60 + seconds;
 };
 
-export const rankRaces = (data) => {
-
-  ['5k', '10k', 'Half Marathon', 'Marathon'].forEach(eventType => {
+export const rankRaces = (data, personalBests) => {
+  const PBdistances = Object.values(personalBests);
+  PBdistances.forEach(distance => {
     data
-      .filter(race => race.event === eventType)
+      .filter(race => race.distance === distance)
       .sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
       .forEach((race, index) => {
         race.rank = index + 1; 
       });
   });
-
-  data
-    .filter(race => race.event === 'Ultra Marathon' || race.event === 'Other')
-    .forEach(race => {
-      race.rank = null;
-    });
 
   return data;
 };

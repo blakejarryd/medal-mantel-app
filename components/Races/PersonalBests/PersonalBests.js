@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { RaceDataContext } from '../../../services/RaceDataProvider';
 import PBSwimLane from './PBSwimLane';
@@ -7,8 +6,8 @@ import RaceFormModal from '../RaceFormModal/RaceFormModal';
 import theme from '../../../theme';
 
 const MyRacesScreen = () => {
-  const { raceData, onNewRaceData } = useContext(RaceDataContext);
-  const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
+  const { raceData, personalBests, onNewRaceData } = useContext(RaceDataContext);
+  const eventTypes = Object.keys(personalBests);
   const [isRaceModalVisible, setRaceModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
@@ -23,7 +22,7 @@ const MyRacesScreen = () => {
   };
   
   const getRacesByEventType = (eventType) => {
-    const races = raceData.filter(race => race.event === eventType);
+    const races = raceData.filter(race => race.distance === personalBests[eventType]);
     return races.sort((a, b) => compareTimes(a.time, b.time));
   };
   
@@ -36,7 +35,7 @@ const MyRacesScreen = () => {
     <View style={styles.safeAreaContainer}>
       <View style={styles.container}>
         <ScrollView>
-          {events.map(eventType => {
+          {eventTypes.map(eventType => {
             const races = getRacesByEventType(eventType);
             return (
               <PBSwimLane

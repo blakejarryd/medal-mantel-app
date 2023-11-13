@@ -2,55 +2,67 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, TextInput, Text, StyleSheet } from 'react-native';
 import theme from '../../../theme';
 
-const RaceDistance = ({ eventName, setEventName, distance, setDistance, isKilometers, distanceUnitToggle }) => {
-  const events = ['5k', '10k', 'Half Marathon', 'Marathon', 'Ultra Marathon', 'Other'];
-  const distances = { '5k': '5', '10k': '10', 'Half Marathon': '21.1', 'Marathon': '42.2' };
+const RaceDistance = ({ eventName, setEventName, personalBests, distance, setDistance, isKilometers, distanceUnitToggle }) => {
   const [inputDistance, setInputDistance] = useState(distance || '');
 
+  const eventTypes = Object.keys(personalBests);
+  
+
+  const isSelected = (eventType) => eventName === eventType;
+
+  console.log(eventName)
+
+  const handleEventSelection = (eventType) => {
+    setEventName(eventType);
+    if (eventType === 'Other') {
+      setInputDistance('');
+    } else {
+      setDistance(personalBests[eventType] || '');
+    }
+  };
+
   useEffect(() => {
-    if (eventName in distances) {
-      setDistance(distances[eventName]);
+    if (eventName && personalBests[eventName]) {
+      setDistance(personalBests[eventName]);
     } else {
       const inputValue = parseFloat(inputDistance);
       setDistance(inputValue);
     }
-  }, [eventName, distance, inputDistance]);
-
-  const isSelected = (event) => eventName === event;
-
-  const handleEventSelection = (event) => {
-    setEventName(event);
-    if (event in distances) {
-      setDistance(distances[event]);
-    } else {
-      if (eventName !== event) {
-        setDistance('');
-        setInputDistance('');
-      }
-    }
-  };
+  }, [eventName, inputDistance, distance]);
 
   return (
     <View>
-      <Text style={styles.label}>Distance</Text>
+      <Text style={styles.label}>Event</Text>
       <View style={styles.verticalButtonGroup}>
-        {events.map((event) => (
+        {eventTypes.map((eventType) => (
           <TouchableOpacity
-            key={event}
+            key={eventType}
             style={[
               styles.buttonWrapper,
-              isSelected(event) ? styles.selectedButtonWrapper : null,
+              isSelected(eventType) ? styles.selectedButtonWrapper : null,
             ]}
-            onPress={() => handleEventSelection(event)}
+            onPress={() => handleEventSelection(eventType)}
           >
-            <Text style={isSelected(event) ? styles.selectedButtonText : styles.buttonText}>
-              {event}
+            <Text style={isSelected(eventType) ? styles.selectedButtonText : styles.buttonText}>
+              {eventType}
             </Text>
           </TouchableOpacity>
         ))}
+        {/* Hardcoded 'Other' button */}
+        <TouchableOpacity
+          style={[
+            styles.buttonWrapper,
+            isSelected('Other') ? styles.selectedButtonWrapper : null,
+          ]}
+          onPress={() => handleEventSelection('Other')}
+        >
+          <Text style={isSelected('Other') ? styles.selectedButtonText : styles.buttonText}>
+            Other
+          </Text>
+        </TouchableOpacity>
       </View>
-
-      {(eventName === 'Ultra Marathon' || eventName === 'Other') && (
+  
+      {eventName === 'Other' && (
         <>
           <View style={styles.unitToggleContainer}>
             <Text style={styles.unitToggleText}>Enter Distance in:</Text>
@@ -90,7 +102,8 @@ const RaceDistance = ({ eventName, setEventName, distance, setDistance, isKilome
       )}
     </View>
   );
-};
+}
+  
 
 const styles = StyleSheet.create({
   label: {

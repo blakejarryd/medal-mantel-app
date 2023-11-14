@@ -4,17 +4,17 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import theme from '../../../theme';
 
 
-
-const ViewEvents = ({ personalBest, onEditPress, onDeletePress, distanceUnit }) => {
+const ViewEvents = ({ personalBest, displayDistance, onEditPress, onDeletePress, distanceUnit }) => {
+  console.log(displayDistance)
   return (
     <View style={styles.infoRow}>
       <Text style={styles.label}>{personalBest.event}</Text>
-      <Text style={styles.value}>{personalBest.distance} {distanceUnit}</Text>
+      <Text style={styles.value}>{displayDistance} {distanceUnit}</Text>
       <TouchableOpacity style={styles.editButton} onPress={onEditPress}>
-      <Icon name="edit" size={16} />
+      <Icon name="edit" size={26} color={"white"} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.deleteButton} onPress={onDeletePress}>
-        <Icon name="delete" size={16} />
+        <Icon name="delete" size={26} color={"white"} />
       </TouchableOpacity>
     </View>
   );
@@ -30,17 +30,17 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
   },
   label: {
-    fontSize: theme.fontSizes.small,
+    fontSize: theme.fontSizes.medium,
     color: theme.colors.textPrimary,
     flex: 3, 
   },
   value: {
-    fontSize: theme.fontSizes.small,
+    fontSize: theme.fontSizes.medium,
     color: theme.colors.textSecondary,
     flex: 2, 
   },
   editButton: {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.primary,
     borderRadius: theme.roundness,
     padding: theme.spacing.xs,
     margin: theme.spacing.xs,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   deleteButton: {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.primary,
     borderRadius: theme.roundness,
     padding: theme.spacing.xs,
     margin: theme.spacing.xs,

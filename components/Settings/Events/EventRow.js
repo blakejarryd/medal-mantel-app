@@ -5,12 +5,13 @@ import EditEvents from './EditEvents';
 import ViewEvents from './ViewEvents';
 
 
-const EventRow = ({ personalBest, isEditing, onEditChange, onSave, onCancel, onEditPress, onDeletePress, distanceUnit }) => {
+const EventRow = ({ personalBest, displayDistance, isEditing, onEditChange, onSave, onCancel, onEditPress, onDeletePress, distanceUnit }) => {
   return (
     <View style={styles.row}>
       {isEditing ? (
         <EditEvents
           personalBest={personalBest}
+          displayDistance={displayDistance}
           onEditChange={onEditChange}
           onSave={onSave}
           onCancel={onCancel}
@@ -19,6 +20,7 @@ const EventRow = ({ personalBest, isEditing, onEditChange, onSave, onCancel, onE
         <ViewEvents
           distanceUnit={distanceUnit}
           personalBest={personalBest}
+          displayDistance={displayDistance}
           onEditPress={onEditPress}
           onDeletePress={onDeletePress}
         />
@@ -34,7 +36,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: theme.colors.surface,
     paddingVertical: theme.spacing.s,
-    paddingHorizontal: theme.spacing.s,
     borderBottomWidth: 0.5,
     borderBottomColor: theme.colors.secondary,
     marginBottom: theme.spacing.xs,

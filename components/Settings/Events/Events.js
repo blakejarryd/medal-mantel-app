@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '../../../theme';
 import { RaceDataContext } from '../../../services/RaceDataProvider';
 import EventHeader from './EventHeader';
@@ -12,10 +12,6 @@ const Events = () => {
   const [editedEvent, setEditedEvent] = useState(''); 
   const [editedDistance, setEditedDistance] = useState(''); 
   const [isAddingNew, setIsAddingNew] = useState(false);
-
-  const convertToMiles = (kilometers) => {
-    return (kilometers * 0.621371).toFixed(2); // Convert to miles and round to 2 decimal places
-  };
 
   useEffect(() => {
     console.log(personalBests);
@@ -31,8 +27,13 @@ const Events = () => {
     deletePersonalBest(id);
   };
 
+  const milesToKilometers = (miles) => {
+    return parseFloat((miles * 1.60934).toFixed(2)); 
+  };
+
   const handleSaveEdit = (index) => {
-    setPersonalBest(editedEvent, parseFloat(editedDistance), personalBests[index].id);
+    const distance = distanceUnit === 'mi' ? milesToKilometers(parseFloat(editedDistance)) : parseFloat(editedDistance);
+    setPersonalBest(editedEvent, distance, personalBests[index].id);
     setEditIndex(-1);
   };
 
@@ -47,57 +48,68 @@ const Events = () => {
     setEditedDistance('');
   };
 
+
   const handleSaveNewEvent = () => {
     setIsAddingNew(false);
-    setPersonalBest(editedEvent, parseFloat(editedDistance));
+    const distance = distanceUnit === 'mi' ? milesToKilometers(parseFloat(editedDistance)) : parseFloat(editedDistance);
+    console.log(distance)
+    setPersonalBest(editedEvent, distance);
   };
+
+  const convertToMiles = (kilometers) => {
+    return (kilometers * 0.621371).toFixed(2); // Convert to miles and round to 2 decimal places
+  };
+
+  const displayDistance = (personalBest) => {
+    if (distanceUnit === "mi") {
+      return convertToMiles(personalBest.distance);
+    } 
+    return personalBest.distance;
+  };
+  
 
 
 
   return (
-    <KeyboardAvoidingView 
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    style={{ flex: 1 }}
-  >
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Events</Text>
-        <EventHeader distanceUnit={distanceUnit}/>
-        {personalBests.map((personalBest, index) => (
-          <EventRow
-            key={personalBest.id}
-            distanceUnit={distanceUnit}
-            personalBest={personalBest}
-            isEditing={index === editIndex}
-            onEditChange={{ setEditedEvent, setEditedDistance }}
-            onSave={() => handleSaveEdit(index)}
-            onCancel={handleCancelEdit}
-            onEditPress={() => handleEditPress(index)}
-            onDeletePress={() => handleDeletePress(personalBest.id)}
-          />
-        ))}
-        {isAddingNew && (
-          <EventRow
-            distanceUnit={distanceUnit}
-            personalBest={{ event: editedEvent, distance: editedDistance }}
-            isEditing={true}
-            onEditChange={{ setEditedEvent, setEditedDistance }}
-            onSave={() => handleSaveNewEvent()}
-            onCancel={() => setIsAddingNew(false)}
-          />
-        )}
-        {!isAddingNew && (
-        <TouchableOpacity style={styles.addButton} onPress={handleAddNewEvent}>
-          <Text style={styles.addButtonText}>Add Event +</Text>
-        </TouchableOpacity>
-        )}
-      </View>
-    </KeyboardAvoidingView>
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>Events</Text>
+      <EventHeader distanceUnit={distanceUnit}/>
+      {personalBests.map((personalBest, index) => (
+        <EventRow
+          key={personalBest.id}
+          distanceUnit={distanceUnit}
+          personalBest={personalBest}
+          displayDistance={displayDistance(personalBest)}
+          isEditing={index === editIndex}
+          onEditChange={{ setEditedEvent, setEditedDistance }}
+          onSave={() => handleSaveEdit(index)}
+          onCancel={handleCancelEdit}
+          onEditPress={() => handleEditPress(index)}
+          onDeletePress={() => handleDeletePress(personalBest.id)}
+        />
+      ))}
+      {isAddingNew && (
+        <EventRow
+          distanceUnit={distanceUnit}
+          personalBest={{ event: editedEvent, distance: editedDistance }}
+          isEditing={true}
+          onEditChange={{ setEditedEvent, setEditedDistance }}
+          onSave={() => handleSaveNewEvent()}
+          onCancel={() => setIsAddingNew(false)}
+        />
+      )}
+      {!isAddingNew && (
+      <TouchableOpacity style={styles.addButton} onPress={handleAddNewEvent}>
+        <Text style={styles.addButtonText}>Add Event +</Text>
+      </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    padding: theme.spacing.m,
+    padding: theme.spacing.s,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.roundness,
     shadowColor: theme.colors.shadow,
@@ -113,12 +125,11 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: theme.fontSizes.medium,
     color: theme.colors.textPrimary,
-    marginBottom: theme.spacing.m,
+    margin: theme.spacing.s,
   },
   addButton: {
     flex: 0.3,
     flexDirection: 'row',
-    //backgroundColor: theme.colors.primary,
     padding: theme.spacing.m,
     borderRadius: theme.roundness,
     alignItems: 'center',
@@ -126,7 +137,7 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     color: theme.colors.secondary,
-    fontSize: theme.fontSizes.small,
+    fontSize: theme.fontSizes.medium,
   },
 });
 

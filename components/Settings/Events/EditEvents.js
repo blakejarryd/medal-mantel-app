@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import theme from '../../../theme';
 
 
-const EditEvents = ({ personalBest, onEditChange, onSave, onCancel }) => {
+
+const EditEvents = ({ personalBest, displayDistance, onEditChange, onSave, onCancel }) => {
   const [editedEvent, setEditedEvent] = useState(personalBest.event);
-  const [editedDistance, setEditedDistance] = useState(String(personalBest.distance));
+  const [editedDistance, setEditedDistance] = useState(displayDistance !== undefined ? String(displayDistance) : '');
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardOffset(e.endCoordinates.height);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardOffset(0);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const handleEventChange = (text) => {
     setEditedEvent(text);
@@ -18,6 +35,7 @@ const EditEvents = ({ personalBest, onEditChange, onSave, onCancel }) => {
   };
 
   return (
+    <ScrollView style={{ flex: 1, marginBottom: keyboardOffset }}>
       <View style={styles.editRow}>
         <TextInput
           style={[styles.editInput, styles.eventColumn]}
@@ -31,12 +49,13 @@ const EditEvents = ({ personalBest, onEditChange, onSave, onCancel }) => {
           keyboardType="numeric" // Assuming distance is a numeric value
         />
         <TouchableOpacity style={styles.saveButton} onPress={onSave}>
-          <Text style={styles.saveButtonText}>Save</Text>
+          <Icon name="save" size={26} color={"white"} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
+          <Icon name="cancel" size={26} color={"white"} />
         </TouchableOpacity>
       </View>
+    </ScrollView>
   );
 };
 
@@ -57,7 +76,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xs,
     marginRight: theme.spacing.s,
     color: theme.colors.textPrimary,
-    fontSize: theme.fontSizes.small,
+    fontSize: theme.fontSizes.medium,
   },
   eventColumn: {
     flex: 3, // Adjust the flex proportion as needed
@@ -72,6 +91,7 @@ const styles = StyleSheet.create({
     margin: theme.spacing.xs,
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
   },
   saveButtonText: {
     color: theme.colors.surface,
@@ -83,6 +103,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xs,
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
   },
   cancelButtonText: {
     color: theme.colors.surface,

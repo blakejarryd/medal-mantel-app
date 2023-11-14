@@ -5,8 +5,8 @@ import theme from '../../../theme';
 const EventHeader = ({ distanceUnit }) => {
   return (
     <View style={styles.headerRow}>
-      <Text style={[styles.headerLabel, styles.eventColumn]}>Event</Text>
-      <Text style={[styles.headerLabel, styles.distanceColumn]}>Distance ({distanceUnit})</Text>
+      <Text style={[styles.headerLabel, styles.eventColumn]}>Event Name</Text>
+      <Text style={[styles.headerLabel, styles.distanceColumn]}>Distance</Text>
       <Text style={[styles.headerLabel, styles.actionsColumn]}></Text>
     </View>
   );
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flex: 2, 
   },
   actionsColumn: {
-    flex: 1, 
+    flex: 3, 
   },
 });
 

@@ -41,7 +41,6 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
         setSeconds('');
       }
       setRaceId(raceData?.id || null);
-      console.log(raceData)
 
       // Find a matching distance in personal bests and set eventName accordingly
       if (raceData) {

@@ -13,10 +13,6 @@ const Events = () => {
   const [editedDistance, setEditedDistance] = useState(''); 
   const [isAddingNew, setIsAddingNew] = useState(false);
 
-  useEffect(() => {
-    console.log(personalBests);
-  }, [personalBests]);
-
   const handleEditPress = (index) => {
     setEditIndex(index);
     setEditedEvent(personalBests[index].event);
@@ -52,7 +48,6 @@ const Events = () => {
   const handleSaveNewEvent = () => {
     setIsAddingNew(false);
     const distance = distanceUnit === 'mi' ? milesToKilometers(parseFloat(editedDistance)) : parseFloat(editedDistance);
-    console.log(distance)
     setPersonalBest(editedEvent, distance);
   };
 
@@ -128,7 +123,6 @@ const styles = StyleSheet.create({
     margin: theme.spacing.s,
   },
   addButton: {
-    flex: 0.3,
     flexDirection: 'row',
     padding: theme.spacing.m,
     borderRadius: theme.roundness,

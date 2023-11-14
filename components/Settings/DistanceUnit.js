@@ -49,7 +49,7 @@ const DistanceUnit = () => {
 
 const styles = StyleSheet.create({
   card: {
-    width: 320,
+    width: 330,
     padding: theme.spacing.m,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.roundness,

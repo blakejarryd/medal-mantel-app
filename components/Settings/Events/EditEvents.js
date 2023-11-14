@@ -26,12 +26,12 @@ const EditEvents = ({ personalBest, displayDistance, onEditChange, onSave, onCan
 
   const handleEventChange = (text) => {
     setEditedEvent(text);
-    onEditChange.setEditedEvent(text); // Update parent state
+    onEditChange.setEditedEvent(text); 
   };
 
   const handleDistanceChange = (text) => {
     setEditedDistance(text);
-    onEditChange.setEditedDistance(text); // Update parent state
+    onEditChange.setEditedDistance(text); 
   };
 
   return (
@@ -46,13 +46,13 @@ const EditEvents = ({ personalBest, displayDistance, onEditChange, onSave, onCan
           style={[styles.editInput, styles.distanceColumn]}
           value={editedDistance}
           onChangeText={handleDistanceChange}
-          keyboardType="numeric" // Assuming distance is a numeric value
+          keyboardType="numeric" 
         />
         <TouchableOpacity style={styles.saveButton} onPress={onSave}>
-          <Icon name="save" size={26} color={"white"} />
+          <Icon name="save" size={26} color={theme.colors.altBackground} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-          <Icon name="cancel" size={26} color={"white"} />
+          <Icon name="cancel" size={26} color={theme.colors.altBackground} />
         </TouchableOpacity>
       </View>
     </ScrollView>

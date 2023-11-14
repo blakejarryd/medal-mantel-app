@@ -10,8 +10,6 @@ const RaceDistance = ({ eventName, setEventName, personalBests, distance, setDis
 
   const isSelected = (eventType) => eventName === eventType;
 
-  console.log(personalBests)
-
   const handleEventSelection = (eventType) => {
     setEventName(eventType);
     if (eventType === 'Other') {

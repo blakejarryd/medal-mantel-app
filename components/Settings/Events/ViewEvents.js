@@ -5,16 +5,15 @@ import theme from '../../../theme';
 
 
 const ViewEvents = ({ personalBest, displayDistance, onEditPress, onDeletePress, distanceUnit }) => {
-  console.log(displayDistance)
   return (
     <View style={styles.infoRow}>
       <Text style={styles.label}>{personalBest.event}</Text>
       <Text style={styles.value}>{displayDistance} {distanceUnit}</Text>
       <TouchableOpacity style={styles.editButton} onPress={onEditPress}>
-      <Icon name="edit" size={26} color={"white"} />
+      <Icon name="edit" size={26} color={theme.colors.altBackground} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.deleteButton} onPress={onDeletePress}>
-        <Icon name="delete" size={26} color={"white"} />
+        <Icon name="delete" size={26} color={theme.colors.altBackground} />
       </TouchableOpacity>
     </View>
   );

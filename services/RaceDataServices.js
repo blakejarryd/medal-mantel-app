@@ -86,11 +86,8 @@ const getPersonalBests = async () => {
 
 const saveOrUpdatePersonalBest = async (event, distance, id = null) => {
   try {
-    console.log(event, distance, id)
     const personalBests = await getPersonalBests();
     if (id) {
-      console.log(event, distance, id)
-      // Update existing personal best
       const existingPersonalBestIndex = personalBests.findIndex(pb => pb.id === id);
       if (existingPersonalBestIndex !== -1) {
         personalBests[existingPersonalBestIndex] = { id, event, distance };
@@ -98,7 +95,6 @@ const saveOrUpdatePersonalBest = async (event, distance, id = null) => {
         personalBests.push({ id, event, distance });
       }
     } else {
-      // Create a new personal best
       const uuid = uuidv4(); 
       personalBests.push({ id: uuid, event, distance });
     }

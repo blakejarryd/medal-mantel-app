@@ -6,13 +6,12 @@ const timeToSeconds = (time) => {
 export const rankRaces = (data, personalBests) => {
   personalBests.forEach(personalBest => {
     data
-      .filter(race => race.distance === personalBest.distance)
+      .filter(race => race.distance == personalBest.distance)
       .sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
       .forEach((race, index) => {
         race.rank = index + 1;
       });
   });
-
   return data;
 };
 

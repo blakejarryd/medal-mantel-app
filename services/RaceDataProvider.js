@@ -14,25 +14,31 @@ export const RaceDataContext = createContext({
   deletePersonalBest: () => {},
 });
 
-const DEFAULT_PERSONAL_BESTS = {
-  '5k': '5',
-  '10k': '10',
-  'Half Marathon': '21.1',
-  'Marathon': '42.2',
-};
+const DEFAULT_PERSONAL_BESTS = [
+  { id: '1', event: '5k', distance: '5' },
+  { id: '2', event: '10k', distance: '10' },
+  { id: '3', event: 'Half Marathon', distance: '21.1' },
+  { id: '4', event: 'Marathon', distance: '42.2' },
+];
 
 const RaceDataProvider = ({ children }) => {
   const [raceDataState, setRaceDataState] = useState([]);
   const [distanceUnit, setDistanceUnit] = useState('km')
-  const [personalBests, setPersonalBests] = useState({});
+  const [personalBests, setPersonalBests] = useState([]);
 
   // Fetch personal bests
   useEffect(() => {
     const fetchPersonalBests = async () => {
       const fetchedPersonalBests = await RaceDataServices.getPersonalBests();
-      if (Object.keys(fetchedPersonalBests).length === 0) {
+      if (fetchedPersonalBests.length === 0) {
         setPersonalBests(DEFAULT_PERSONAL_BESTS);
-        await RaceDataServices.saveOrUpdateMultiplePersonalBests(DEFAULT_PERSONAL_BESTS);
+        for (const personalBest of DEFAULT_PERSONAL_BESTS) {
+          await RaceDataServices.saveOrUpdatePersonalBest(
+            personalBest.event,
+            personalBest.distance,
+            personalBest.id,
+          );
+        }
       } else {
         setPersonalBests(fetchedPersonalBests);
       }
@@ -49,7 +55,7 @@ const RaceDataProvider = ({ children }) => {
       setRaceDataState(rankedData);
     };
 
-    if (Object.keys(personalBests).length > 0) {
+    if (personalBests.length > 0) {
       fetchAndRankRaceData();
     }
   }, [personalBests]);
@@ -92,27 +98,23 @@ const RaceDataProvider = ({ children }) => {
     }
   }, [personalBests]);
 
-  const handleSetPersonalBest = useCallback(async (event, distance) => {
+  const handleSetPersonalBest = useCallback(async (event, distance, id) => {
     try {
-      await RaceDataServices.saveOrUpdatePersonalBest(event, distance);
-      setPersonalBests(prevBests => ({ ...prevBests, [event]: distance }));
+      const updatedPersonalBests = await RaceDataServices.saveOrUpdatePersonalBest(event, distance, id);
+      setPersonalBests(updatedPersonalBests);
     } catch (error) {
       console.error('Error setting personal best', error);
     }
-  }, []);
+  }, [setPersonalBests]);
 
-  const handleDeletePersonalBest = useCallback(async (event) => {
+  const handleDeletePersonalBest = useCallback(async (id) => {
     try {
-      await RaceDataServices.deletePersonalBest(event);
-      setPersonalBests(prevBests => {
-        const updatedBests = { ...prevBests };
-        delete updatedBests[event];
-        return updatedBests;
-      });
+      const updatedPersonalBests = await RaceDataServices.deletePersonalBest(id);
+      setPersonalBests(updatedPersonalBests);
     } catch (error) {
       console.error('Error deleting personal best', error);
     }
-  }, []);
+  }, [setPersonalBests]);
 
   return (
     <RaceDataContext.Provider

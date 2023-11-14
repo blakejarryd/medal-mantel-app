@@ -5,30 +5,41 @@ import theme from '../../../theme';
 const RaceDistance = ({ eventName, setEventName, personalBests, distance, setDistance, isKilometers, distanceUnitToggle }) => {
   const [inputDistance, setInputDistance] = useState(distance || '');
 
-  const eventTypes = Object.keys(personalBests);
+  const eventTypes = personalBests.map(personalBest => personalBest.event);
   
 
   const isSelected = (eventType) => eventName === eventType;
 
-  console.log(eventName)
+  console.log(personalBests)
 
   const handleEventSelection = (eventType) => {
     setEventName(eventType);
     if (eventType === 'Other') {
       setInputDistance('');
     } else {
-      setDistance(personalBests[eventType] || '');
+      const personalBest = personalBests.find(pb => pb.event === eventType);
+      if (personalBest) {
+        setDistance(personalBest.distance);
+      } else {
+        setDistance('');
+      }
     }
   };
 
   useEffect(() => {
-    if (eventName && personalBests[eventName]) {
-      setDistance(personalBests[eventName]);
+    if (eventName) {
+      const personalBest = personalBests.find(pb => pb.event === eventName);
+      if (personalBest) {
+        setDistance(personalBest.distance);
+      } else {
+        const inputValue = parseFloat(inputDistance);
+        setDistance(inputValue);
+      }
     } else {
       const inputValue = parseFloat(inputDistance);
       setDistance(inputValue);
     }
-  }, [eventName, inputDistance, distance]);
+  }, [eventName, inputDistance, distance, personalBests]);
 
   return (
     <View>

@@ -77,41 +77,52 @@ const setDistanceUnitPreference = async (unit) => {
 const getPersonalBests = async () => {
   try {
     const existingData = await AsyncStorage.getItem(PERSONAL_BESTS_KEY);
-    return existingData ? JSON.parse(existingData) : {};
+    return existingData ? JSON.parse(existingData) : [];
   } catch (e) {
     console.error('Failed to fetch personal bests', e);
-    return {};
+    return [];
   }
 };
 
-const saveOrUpdatePersonalBest = async (event, distance) => {
+const saveOrUpdatePersonalBest = async (event, distance, id = null) => {
   try {
+    console.log(event, distance, id)
     const personalBests = await getPersonalBests();
-    personalBests[event] = distance;
-    console.log(event, distance)
+    if (id) {
+      console.log(event, distance, id)
+      // Update existing personal best
+      const existingPersonalBestIndex = personalBests.findIndex(pb => pb.id === id);
+      if (existingPersonalBestIndex !== -1) {
+        personalBests[existingPersonalBestIndex] = { id, event, distance };
+      } else {
+        personalBests.push({ id, event, distance });
+      }
+    } else {
+      // Create a new personal best
+      const uuid = uuidv4(); 
+      personalBests.push({ id: uuid, event, distance });
+    }
     await AsyncStorage.setItem(PERSONAL_BESTS_KEY, JSON.stringify(personalBests));
+    
+    // Return the updated personalBests array
+    return personalBests;
   } catch (e) {
     console.error('Failed to save or update personal best', e);
+    return []; // Return an empty array or handle the error appropriately
   }
 };
 
-const saveOrUpdateMultiplePersonalBests = async (personalBests) => {
-  try {
-    for (const [event, distance] of Object.entries(personalBests)) {
-      await saveOrUpdatePersonalBest(event, distance);
-    }
-  } catch (e) {
-    console.error('Failed to save or update multiple personal bests', e);
-  }
-};
-
-const deletePersonalBest = async (event) => {
+const deletePersonalBest = async (id) => {
   try {
     const personalBests = await getPersonalBests();
-    delete personalBests[event];
-    await AsyncStorage.setItem(PERSONAL_BESTS_KEY, JSON.stringify(personalBests));
+    const updatedPersonalBests = personalBests.filter((pb) => pb.id !== id);
+    await AsyncStorage.setItem(PERSONAL_BESTS_KEY, JSON.stringify(updatedPersonalBests));
+    
+    // Return the updated personalBests array
+    return updatedPersonalBests;
   } catch (e) {
     console.error('Failed to delete personal best', e);
+    return []; // Return an empty array or handle the error appropriately
   }
 };
 
@@ -124,6 +135,5 @@ export default {
   setDistanceUnitPreference,
   getPersonalBests,
   saveOrUpdatePersonalBest,
-  saveOrUpdateMultiplePersonalBests,
   deletePersonalBest,
 };

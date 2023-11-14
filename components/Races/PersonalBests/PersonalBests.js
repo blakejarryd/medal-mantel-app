@@ -7,7 +7,7 @@ import theme from '../../../theme';
 
 const MyRacesScreen = () => {
   const { raceData, personalBests, onNewRaceData } = useContext(RaceDataContext);
-  const eventTypes = Object.keys(personalBests);
+  const eventTypes = personalBests.map(personalBest => personalBest.event);
   const [isRaceModalVisible, setRaceModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
@@ -22,7 +22,9 @@ const MyRacesScreen = () => {
   };
   
   const getRacesByEventType = (eventType) => {
-    const races = raceData.filter(race => race.distance === personalBests[eventType]);
+    const personalBest = personalBests.find(pb => pb.event === eventType);
+    const races = raceData.filter(race => race.distance == personalBest.distance);
+
     return races.sort((a, b) => compareTimes(a.time, b.time));
   };
   

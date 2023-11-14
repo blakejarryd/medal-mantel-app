@@ -2,12 +2,16 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import theme from '../../theme';
 import DistanceUnit from './DistanceUnit';
+import PersonalBestView from './PersonalBestView';
 
 const Settings = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.settingsWrapper}>
-        <DistanceUnit />
+      <View style={styles.cardWrapper}>
+        <View style={styles.settingsCard}>
+          <DistanceUnit />
+          <PersonalBestView />
+        </View>
       </View>
     </View>
   );
@@ -16,14 +20,16 @@ const Settings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start', // Align content to the top
-    alignItems: 'center', // Center the content horizontally
+    justifyContent: 'flex-start', // Move calculations to the top
+    alignItems: 'center',
     backgroundColor: theme.colors.altBackground,
     paddingTop: theme.spacing.m,
+    paddingBottom: theme.spacing.s,
+    paddingHorizontal: theme.spacing.s,
   },
-  settingsWrapper: {
-    width: 290, // Fixed width for the settings wrapper
-    alignItems: 'center', // Center the content inside the wrapper
+  cardWrapper: {
+    width: 350, // Fixed width for the card wrapper
+    alignItems: 'center', // Center the card horizontally
     margin: theme.spacing.s,
   },
   text: {

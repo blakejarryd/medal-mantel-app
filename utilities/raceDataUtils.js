@@ -4,13 +4,12 @@ const timeToSeconds = (time) => {
 };
 
 export const rankRaces = (data, personalBests) => {
-  const PBdistances = Object.values(personalBests);
-  PBdistances.forEach(distance => {
+  personalBests.forEach(personalBest => {
     data
-      .filter(race => race.distance === distance)
+      .filter(race => race.distance === personalBest.distance)
       .sort((a, b) => timeToSeconds(a.time) - timeToSeconds(b.time))
       .forEach((race, index) => {
-        race.rank = index + 1; 
+        race.rank = index + 1;
       });
   });
 

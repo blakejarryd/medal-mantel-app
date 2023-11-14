@@ -26,7 +26,7 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
   useEffect(() => {
       setRaceName(raceData?.raceName || '');
       setEventDate(raceData?.raceDate ? new Date(raceData.raceDate) : new Date());
-      setEventName(raceData?.event || event || '');
+      setEventName(event || '');
       setDistance(raceData?.distance || 0);
       setConvertedDistance(raceData?.convertedDistance || '');
       setIsKilometers(distanceUnit === 'km')
@@ -41,7 +41,15 @@ const RaceFormModal = ({ isVisible, onClose, onSubmit, event, raceData }) => {
         setSeconds('');
       }
       setRaceId(raceData?.id || null);
-      console.log(event)
+      console.log(raceData)
+
+      // Find a matching distance in personal bests and set eventName accordingly
+      if (raceData) {
+        const matchingPersonalBest = personalBests.find((pb) => pb.distance == raceData.distance);
+        if (matchingPersonalBest) {
+        setEventName(matchingPersonalBest.event);
+        }
+      }
   }, [raceData, distanceUnit, event]);
 
   useEffect(() => {
